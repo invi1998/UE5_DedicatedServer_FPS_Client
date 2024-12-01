@@ -53,6 +53,23 @@ void AShooterGameMode::SetServerParameters(FServerParameters& OutServerParameter
 
 }
 
+void AShooterGameMode::ParseCommandLinePort(int32& port)
+{
+	// 从命令行参数中获取端口号，如果没有获取到，则使用虚幻引擎里设置的默认端口号
+	TArray<FString> CommandLineTokens;
+	TArray<FString> CommandLineSwitches;
+	FCommandLine::Parse(FCommandLine::Get(), CommandLineTokens, CommandLineSwitches);		// 解析命令行参数
+	for (const FString& Token : CommandLineTokens)
+	{
+		if (Token.StartsWith(TEXT("-port=")))
+		{
+			FString portString = Token.RightChop(6);
+			port = FCString::Atoi(*portString);
+			return;
+		}
+	}
+}
+
 void AShooterGameMode::InitGameLift()
 {
 	UE_LOG(LogShooterGameMode, Log, TEXT("Initializing the GameLift Server..."));
@@ -125,5 +142,11 @@ void AShooterGameMode::InitGameLift()
 		return true;
 	};
 	ProcessParameters.OnHealthCheck.BindLambda(OnHealthCheck);
+
+	//The game server gets ready to report that it is ready to host game sessions（游戏服务器准备好报告它已准备好托管游戏会话）
+	// 端口号将会使用虚幻引擎里设置的默认端口号
+	int32 port = FURL::UrlConfig.DefaultPort;
+	ParseCommandLinePort(port);	// 获取命令行参数中的端口号（如果有的话）
+	ProcessParameters.port = port;
 
 }

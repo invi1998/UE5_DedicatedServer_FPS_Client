@@ -1,3 +1,5 @@
+`对于UE项目来说，服务端和客户端代码是一体的，所以这个项目名起的有歧义，忽略就好`
+
 # FPSTemplate
 
 该项目是一个具有基本战斗功能的第一人称射击游戏。包含的功能有：
@@ -15,3 +17,4 @@
 ---
 
 ps：项目里缺少一个较大的纹理资产，所以项目直接克隆运行是会报错的，因为该资产较大，无法上传git，所以我将其剔除了，如果有需要，可以留言联系。Content/Effects/Textures/Flipbooks/SmokeSwirl_3_Flipbook_CHANNELPACK.uasset
+

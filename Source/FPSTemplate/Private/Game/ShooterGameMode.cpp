@@ -97,8 +97,20 @@ void AShooterGameMode::InitGameLift()
 		UE_LOG(LogShooterGameMode, Log, TEXT("GameSession Initiated: %s"), *gameSessionId);
 		GameLiftSdkModule->ActivateGameSession();
 	};
-
 	// 绑定游戏会话开始事件
 	ProcessParameters.OnStartGameSession.BindLambda(OnGameSession);
+
+	//Implement callback function OnProcessTerminate (实现回调函数 OnProcessTerminate)
+	//GameLift invokes this callback before shutting down the instance hosting this game server. （GameLift 在关闭托管此游戏服务器的实例之前调用此回调。）
+	//It gives the game server a chance to save its state, communicate with services, etc., （它给游戏服务器一个机会来保存其状态，与服务通信等。）
+	//and initiate shut down. When the game server is ready to shut down, it invokes the （并启动关闭。当游戏服务器准备关闭时，它调用）
+	//server SDK call ProcessEnding() to tell GameLift it is shutting down.（服务器 SDK 调用 ProcessEnding() 告诉 GameLift 它正在关闭。）
+	auto OnProcessTerminate = [=]()
+	{
+		UE_LOG(LogShooterGameMode, Log, TEXT("Game Server Process is terminating"));
+		GameLiftSdkModule->ProcessEnding();
+	};
+	// 绑定进程终止事件
+	ProcessParameters.OnTerminate.BindLambda(OnProcessTerminate);
 
 }

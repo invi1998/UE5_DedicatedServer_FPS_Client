@@ -19,6 +19,40 @@ void AShooterGameMode::BeginPlay()
 #endif
 }
 
+void AShooterGameMode::SetServerParameters(FServerParameters& OutServerParameters)
+{
+	//AuthToken returned from the "aws gamelift get-compute-auth-token" API. Note this will expire and require a new call to the API after 15 minutes.
+	// 从 "aws gamelift get-compute-auth-token" API 返回的 AuthToken。请注意，此令牌将在 15 分钟后过期，并需要调用 API 获取新的令牌。
+	if (FParse::Value(FCommandLine::Get(), TEXT("-authtoken="), OutServerParameters.m_authToken))
+	{
+		UE_LOG(LogShooterGameMode, Log, TEXT("AUTH_TOKEN: %s"), *OutServerParameters.m_authToken)
+	}
+
+	//The Host/compute-name of the GameLift Anywhere instance.
+	// GameLift Anywhere 实例的主机/计算机名称。
+	if (FParse::Value(FCommandLine::Get(), TEXT("-hostid="), OutServerParameters.m_hostId))
+	{
+		UE_LOG(LogShooterGameMode, Log, TEXT("HOST_ID: %s"), *OutServerParameters.m_hostId)
+	}
+
+	//The Anywhere Fleet ID.
+	if (FParse::Value(FCommandLine::Get(), TEXT("-fleetid="), OutServerParameters.m_fleetId))
+	{
+		UE_LOG(LogShooterGameMode, Log, TEXT("FLEET_ID: %s"), *OutServerParameters.m_fleetId)
+	}
+
+	//The WebSocket URL (GameLiftServiceSdkEndpoint).
+	if (FParse::Value(FCommandLine::Get(), TEXT("-websocketurl="), OutServerParameters.m_webSocketUrl))
+	{
+		UE_LOG(LogShooterGameMode, Log, TEXT("WEBSOCKET_URL: %s"), *OutServerParameters.m_webSocketUrl)
+	}
+
+	// 当前进程ID
+	OutServerParameters.m_processId = FString::Printf(TEXT("%d"), FPlatformProcess::GetCurrentProcessId());
+	UE_LOG(LogShooterGameMode, Log, TEXT("PROCESS_ID [PID]: %s"), *OutServerParameters.m_processId)
+
+}
+
 void AShooterGameMode::InitGameLift()
 {
 	UE_LOG(LogShooterGameMode, Log, TEXT("Initializing the GameLift Server..."));
@@ -42,30 +76,29 @@ void AShooterGameMode::InitGameLift()
 	// 换句话说：如果是我们本地的服务器，我们需要配置这些参数，如果是 AWS 管理的 EC2 舰队，这些参数是不需要的
 	FServerParameters ServerParameters;
 
-	//AuthToken returned from the "aws gamelift get-compute-auth-token" API. Note this will expire and require a new call to the API after 15 minutes.
-	// 从 "aws gamelift get-compute-auth-token" API 返回的 AuthToken。请注意，此令牌将在 15 分钟后过期，并需要调用 API 获取新的令牌。
-	if (FParse::Value(FCommandLine::Get(), TEXT("-authtoken="), ServerParameters.m_authToken))
-	{
-		UE_LOG(LogShooterGameMode, Log, TEXT("AUTH_TOKEN: %s"), *ServerParameters.m_authToken)
-	}
+	// 配置服务器参数
+	SetServerParameters(ServerParameters);
 
-	//The Host/compute-name of the GameLift Anywhere instance.
-	// GameLift Anywhere 实例的主机/计算机名称。
-	if (FParse::Value(FCommandLine::Get(), TEXT("-hostid="), ServerParameters.m_hostId))
-	{
-		UE_LOG(LogShooterGameMode, Log, TEXT("HOST_ID: %s"), *ServerParameters.m_hostId)
-	}
+	//InitSDK establishes a local connection with GameLift's agent to enable further communication. （InitSDK 建立了与 GameLift 代理的本地连接，以便进一步通信。）
+	//Use InitSDK(serverParameters) for a GameLift Anywhere fleet. （对于 GameLift Anywhere 舰队，请使用 InitSDK(serverParameters)。）
+	//Use InitSDK() for a GameLift managed EC2 fleet.（对于 GameLift 管理的 EC2 舰队，请使用 InitSDK()。）
+	GameLiftSdkModule->InitSDK(ServerParameters);
 
-	//The Anywhere Fleet ID.
-	if (FParse::Value(FCommandLine::Get(), TEXT("-fleetid="), ServerParameters.m_fleetId))
-	{
-		UE_LOG(LogShooterGameMode, Log, TEXT("FLEET_ID: %s"), *ServerParameters.m_fleetId)
-	}
 
-	//The WebSocket URL (GameLiftServiceSdkEndpoint).
-	if (FParse::Value(FCommandLine::Get(), TEXT("-websocketurl="), ServerParameters.m_webSocketUrl))
+	//Implement callback function onStartGameSession（实现回调函数 onStartGameSession）
+	//GameLift sends a game session activation request to the game server （GameLift 向游戏服务器发送游戏会话激活请求）
+	//and passes a game session object with game properties and other settings. （并传递具有游戏属性和其他设置的游戏会话对象。）
+	//Here is where a game server takes action based on the game session object. （这是游戏服务器根据游戏会话对象采取行动的地方。）
+	//When the game server is ready to receive incoming player connections, （当游戏服务器准备好接收传入的玩家连接时，）
+	//it invokes the server SDK call ActivateGameSession().（它调用服务器 SDK 调用 ActivateGameSession()。）
+	auto OnGameSession = [=](Aws::GameLift::Server::Model::GameSession InGameSession)
 	{
-		UE_LOG(LogShooterGameMode, Log, TEXT("WEBSOCKET_URL: %s"), *ServerParameters.m_webSocketUrl)
-	}
+		FString gameSessionId = FString(InGameSession.GetGameSessionId());
+		UE_LOG(LogShooterGameMode, Log, TEXT("GameSession Initiated: %s"), *gameSessionId);
+		GameLiftSdkModule->ActivateGameSession();
+	};
+
+	// 绑定游戏会话开始事件
+	ProcessParameters.OnStartGameSession.BindLambda(OnGameSession);
 
 }

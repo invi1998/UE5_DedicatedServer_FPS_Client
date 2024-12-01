@@ -113,4 +113,17 @@ void AShooterGameMode::InitGameLift()
 	// 绑定进程终止事件
 	ProcessParameters.OnTerminate.BindLambda(OnProcessTerminate);
 
+	//Implement callback function OnHealthCheck（实现回调函数 OnHealthCheck）
+	//GameLift invokes this callback approximately every 60 seconds.（GameLift 大约每 60 秒调用此回调。）
+	//A game server might want to check the health of dependencies, etc.（游戏服务器可能想要检查依赖项的健康状况等。）
+	//Then it returns health status true if healthy, false otherwise.（然后，如果健康，则返回健康状态 true，否则返回 false。）
+	//The game server must respond within 60 seconds, or GameLift records 'false'.（游戏服务器必须在 60 秒内响应，否则 GameLift 记录“false”。）
+	//In this example, the game server always reports healthy.（在此示例中，游戏服务器始终报告健康。）
+	auto OnHealthCheck = [=]()->bool
+	{
+		UE_LOG(LogShooterGameMode, Log, TEXT("Health Check is good"));
+		return true;
+	};
+	ProcessParameters.OnHealthCheck.BindLambda(OnHealthCheck);
+
 }

@@ -149,4 +149,15 @@ void AShooterGameMode::InitGameLift()
 	ParseCommandLinePort(port);	// 获取命令行参数中的端口号（如果有的话）
 	ProcessParameters.port = port;
 
+	//Here, the game server tells GameLift where to find game session log files.（在这里，游戏服务器告诉 GameLift 在哪里找到游戏会话日志文件。）
+	//At the end of a game session, GameLift uploads everything in the specified （在游戏会话结束时，GameLift 会上传指定的所有内容）
+	//location and stores it in the cloud for access later.（位置并将其存储在云中以供以后访问。）
+	TArray<FString> LogFiles;
+	LogFiles.Add(TEXT("FPSTemplate/Saved/Logs/FPSTemplate.log"));
+	ProcessParameters.logParameters = LogFiles;
+
+	//The game server calls ProcessReady() to tell GameLift it's ready to host game sessions.（游戏服务器调用 ProcessReady() 告诉 GameLift 它已准备好托管游戏会话。）
+	UE_LOG(LogShooterGameMode, Log, TEXT("Calling Process Ready"));
+	GameLiftSdkModule->ProcessReady(ProcessParameters);
+
 }

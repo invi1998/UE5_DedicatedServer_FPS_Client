@@ -1,16 +1,16 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright invi1998.
 
 using UnrealBuildTool;
 
-public class FPSTemplate : ModuleRules
+public class DedicatedServers : ModuleRules
 {
-	public FPSTemplate(ReadOnlyTargetRules Target) : base(Target)
+	public DedicatedServers(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "PhysicsCore", "GameLiftServerSDK", "DedicatedServers" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTags", "Slate", "SlateCore" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

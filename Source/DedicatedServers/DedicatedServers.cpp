@@ -3,4 +3,4 @@
 #include "DedicatedServers.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_MODULE( FDefaultModuleImpl, DedicatedServers, "DedicatedServers" );
+IMPLEMENT_MODULE( FDefaultModuleImpl, DedicatedServers );

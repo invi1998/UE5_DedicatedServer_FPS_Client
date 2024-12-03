@@ -6,6 +6,7 @@
 #include "UObject/Object.h"
 #include "HTTPRequestManager.generated.h"
 
+class UAPIData;
 /**
  * HTTP 请求管理器
  */
@@ -15,5 +16,6 @@ class DEDICATEDSERVERS_API UHTTPRequestManager : public UObject
 	GENERATED_BODY()
 
 public:
-	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAPIData> APIData;
 };

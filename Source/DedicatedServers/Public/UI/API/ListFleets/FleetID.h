@@ -18,4 +18,6 @@ class DEDICATEDSERVERS_API UFleetID : public UUserWidget
 public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> TextBlock_FleetID;
+	
+	void SetFleetID(const FString& String) const;
 };

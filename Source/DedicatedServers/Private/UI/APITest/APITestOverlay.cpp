@@ -4,8 +4,11 @@
 #include "UI/APITest/APITestOverlay.h"
 
 #include "Components/Button.h"
+#include "Components/ScrollBox.h"
+#include "UI/API/ListFleets/FleetID.h"
 #include "UI/API/ListFleets/ListFleetsBox.h"
 #include "UI/APITest/APITestManger.h"
+#include "UI/HTTP/HTTPRequestTypes.h"
 
 void UAPITestOverlay::NativeConstruct()
 {
@@ -37,15 +40,28 @@ void UAPITestOverlay::ListFleetsButtonClicked()
 
 void UAPITestOverlay::OnListFleetsResponseReceived(const FDSListFleetsResponse& ListFleetsResponse, bool bWasSuccessful)
 {
+	if (APITestManager->OnListFleetsResponseReceived.IsAlreadyBound(this, &UAPITestOverlay::OnListFleetsResponseReceived))
+	{
+		APITestManager->OnListFleetsResponseReceived.RemoveDynamic(this, &UAPITestOverlay::OnListFleetsResponseReceived);
+	}
+	
+	ListFleetsBox->ScrollBox_ListFleets->ClearChildren();
 	if (bWasSuccessful)
 	{
 		// 显示舰队列表
-		ListFleetsBox->ShowFleetList(ListFleetsResponse.FleetIds);
+		for (const FString& FleetId : ListFleetsResponse.FleetIds)
+		{
+			UFleetID* FleetIDWidget = CreateWidget<UFleetID>(this, ListFleetsBox->FleetIDWidgetClass);
+			FleetIDWidget->SetFleetID(FleetId);
+			ListFleetsBox->ScrollBox_ListFleets->AddChild(FleetIDWidget);
+		}
 	}
 	else
 	{
 		// 显示错误信息
-		ListFleetsBox->ShowError(TEXT("Failed to list fleets"));
+		UFleetID* FleetIDWidget = CreateWidget<UFleetID>(this, ListFleetsBox->FleetIDWidgetClass);
+		FleetIDWidget->SetFleetID("Failed to list fleets");
+		ListFleetsBox->ScrollBox_ListFleets->AddChild(FleetIDWidget);
 	}
 
 	ListFleetsBox->Button_ListFleets->SetIsEnabled(true);

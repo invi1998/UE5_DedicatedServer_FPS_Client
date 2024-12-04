@@ -24,4 +24,7 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> Button_ListFleets;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UUserWidget> FleetIDWidgetClass;
 };

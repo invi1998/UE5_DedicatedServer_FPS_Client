@@ -8,7 +8,7 @@
 
 class UAPITestManger;
 class UListFleetsBox;
-class FDSListFleetsResponse;
+struct FDSListFleetsResponse;
 /**
  * 
  */

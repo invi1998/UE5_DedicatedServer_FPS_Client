@@ -6,13 +6,12 @@
 #include "HttpModule.h"
 #include "JsonObjectConverter.h"
 #include "Data/API/APIData.h"
+#include "DedicatedServers/DedicatedServers.h"
 #include "Interfaces/IHttpResponse.h"
 #include "UI/HTTP/HTTPRequestTypes.h"
 
-void UAPITestManger::ListFleetsButtonClicked()
+void UAPITestManger::ListFleets()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ListFleetsButtonClicked"));
-
 	checkf(APIData, TEXT("APIData is nullptr"));
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
 	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::GameSessionsAPI::ListFleets);
@@ -38,23 +37,23 @@ void UAPITestManger::ListFleets_Response(FHttpRequestPtr Request, FHttpResponseP
 	// 将JSON字符串反序列化为JSON对象
 	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
 	{
-		if (JsonObject->HasField(TEXT("$metadata")))
+		if (UHTTPRequestManager::ContainErrors(JsonObject))
 		{
-			TSharedPtr<FJsonObject> MetaDataObject = JsonObject->GetObjectField(TEXT("$metadata"));
-			// 将元数据转换为FDSMeataData结构
-			FDSMeataData DSMetaData;
-			FJsonObjectConverter::JsonObjectToUStruct<FDSMeataData>(MetaDataObject.ToSharedRef(), &DSMetaData, 0, 0);
-
-			DSMetaData.Dump();
+			OnListFleetsResponseReceived.Broadcast(FDSListFleetsResponse(), false);
+			return;
 		}
+		
+		UHTTPRequestManager::DumpMetaData(JsonObject);
 
 		FDSListFleetsResponse ListFleetsResponse;
 		// 将JSON对象转换为FDSListFleetsResponse结构
 		FJsonObjectConverter::JsonObjectToUStruct<FDSListFleetsResponse>(JsonObject.ToSharedRef(), &ListFleetsResponse, 0, 0);
 		ListFleetsResponse.Dump();
+
+		OnListFleetsResponseReceived.Broadcast(ListFleetsResponse, true);
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Failed to deserialize JSON object"));
+		UE_LOG(LogDedicatedServers, Error, TEXT("Failed to deserialize JSON response"));
 	}
 }

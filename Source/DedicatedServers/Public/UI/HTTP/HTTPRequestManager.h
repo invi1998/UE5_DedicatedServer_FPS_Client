@@ -18,4 +18,10 @@ class DEDICATEDSERVERS_API UHTTPRequestManager : public UObject
 public:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAPIData> APIData;
+
+	static bool ContainErrors(TSharedPtr<FJsonObject> JsonObject);
+
+	static void DumpMetaData(TSharedPtr<FJsonObject> JsonObject);
+
+	static void DumpListFleetsResponse(TSharedPtr<FJsonObject> JsonObject);
 };

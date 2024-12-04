@@ -8,6 +8,7 @@
 
 class UAPITestManger;
 class UListFleetsBox;
+class FDSListFleetsResponse;
 /**
  * 
  */
@@ -29,4 +30,11 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UAPITestManger> APITestManager;
+
+	UFUNCTION()
+	void ListFleetsButtonClicked();
+
+	// 收到舰队列表响应
+	UFUNCTION()
+	void OnListFleetsResponseReceived(const FDSListFleetsResponse& ListFleetsResponse, bool bWasSuccessful);
 };

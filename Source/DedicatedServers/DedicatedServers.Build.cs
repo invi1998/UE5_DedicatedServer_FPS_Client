@@ -15,7 +15,9 @@ public class DedicatedServers : ModuleRules
 			"Engine",
 			"GameLiftServerSDK",
 			"GameplayTags",
-			"HTTP"
+			"HTTP",
+			"Json",
+			"JsonUtilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

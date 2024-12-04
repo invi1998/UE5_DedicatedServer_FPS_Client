@@ -47,6 +47,11 @@ void UAPITestManger::ListFleets_Response(FHttpRequestPtr Request, FHttpResponseP
 
 			DSMetaData.Dump();
 		}
+
+		FDSListFleetsResponse ListFleetsResponse;
+		// 将JSON对象转换为FDSListFleetsResponse结构
+		FJsonObjectConverter::JsonObjectToUStruct<FDSListFleetsResponse>(JsonObject.ToSharedRef(), &ListFleetsResponse, 0, 0);
+		ListFleetsResponse.Dump();
 	}
 	else
 	{

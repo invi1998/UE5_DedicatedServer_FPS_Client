@@ -12,3 +12,14 @@ void FDSMeataData::Dump() const
 	UE_LOG(LogDedicatedServers, Log, TEXT("Attempts: %d"), attempts);
 	UE_LOG(LogDedicatedServers, Log, TEXT("Total Retry Delay: %f"), totalRetryDelay);
 }
+
+void FDSListFleetsResponse::Dump() const
+{
+	UE_LOG(LogDedicatedServers, Log, TEXT("ListFleetsResponse:"));
+	UE_LOG(LogDedicatedServers, Log, TEXT("FleetIds:"));
+	for (const FString& FleetId : FleetIds)
+	{
+		UE_LOG(LogDedicatedServers, Log, TEXT("  %s"), *FleetId);
+	}
+	UE_LOG(LogDedicatedServers, Log, TEXT("NextToken: %s"), *NextToken);
+}

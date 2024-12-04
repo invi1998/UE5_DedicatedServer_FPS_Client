@@ -23,3 +23,17 @@ struct FDSMeataData
 
 	void Dump() const;
 };
+
+USTRUCT()
+struct FDSListFleetsResponse
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<FString> FleetIds;	// 舰队ID数组
+
+	UPROPERTY()
+	FString NextToken;			// 下一个令牌
+
+	void Dump() const;
+};

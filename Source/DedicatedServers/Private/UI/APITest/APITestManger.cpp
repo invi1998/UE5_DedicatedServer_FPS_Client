@@ -4,8 +4,10 @@
 #include "UI/APITest/APITestManger.h"
 
 #include "HttpModule.h"
+#include "JsonObjectConverter.h"
 #include "Data/API/APIData.h"
 #include "Interfaces/IHttpResponse.h"
+#include "UI/HTTP/HTTPRequestTypes.h"
 
 void UAPITestManger::ListFleetsButtonClicked()
 {
@@ -36,16 +38,14 @@ void UAPITestManger::ListFleets_Response(FHttpRequestPtr Request, FHttpResponseP
 	// 将JSON字符串反序列化为JSON对象
 	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
 	{
-		if (JsonObject->HasField(TEXT("FleetIds")))
+		if (JsonObject->HasField(TEXT("$metadata")))
 		{
-			for (const TSharedPtr<FJsonValue>& FleetId : JsonObject->GetArrayField(TEXT("FleetIds")))
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FleetId->AsString());
-			}
-		}
-		else
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, TEXT("Failed to get FleetId"));
+			TSharedPtr<FJsonObject> MetaDataObject = JsonObject->GetObjectField(TEXT("$metadata"));
+			// 将元数据转换为FDSMeataData结构
+			FDSMeataData DSMetaData;
+			FJsonObjectConverter::JsonObjectToUStruct<FDSMeataData>(MetaDataObject.ToSharedRef(), &DSMetaData, 0, 0);
+
+			DSMetaData.Dump();
 		}
 	}
 	else

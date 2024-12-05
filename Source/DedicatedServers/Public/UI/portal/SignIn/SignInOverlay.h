@@ -18,7 +18,7 @@ class DEDICATEDSERVERS_API USignInOverlay : public UUserWidget
 
 public:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UJoinGame> JoinGameWObject;
+	TObjectPtr<UJoinGame> JoinGameWidget;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UPortalManager> PortalManagerClass;
@@ -29,5 +29,11 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<UPortalManager> PortalManager;
+
+	UFUNCTION()
+	void OnJoinGameButtonClicked();
+
+	UFUNCTION()
+	void UpdateJoinGameStatusMessage(const FString& Message);
 	
 };

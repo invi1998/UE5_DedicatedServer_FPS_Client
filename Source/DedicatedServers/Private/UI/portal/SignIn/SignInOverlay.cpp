@@ -12,6 +12,9 @@ void USignInOverlay::NativeConstruct()
 	Super::NativeConstruct();
 
 	checkf(PortalManagerClass, TEXT("PortalManagerClass is nullptr"));
+	checkf(IsValid(JoinGameWidget), TEXT("JoinGameWidget is nullptr"));
+	checkf(IsValid(JoinGameWidget->Button_JoinGame), TEXT("Button_JoinGame is nullptr"));
+	
 	PortalManager = NewObject<UPortalManager>(this, PortalManagerClass);
 
 	JoinGameWidget->Button_JoinGame->OnClicked.AddDynamic(this, &USignInOverlay::OnJoinGameButtonClicked);
@@ -20,6 +23,8 @@ void USignInOverlay::NativeConstruct()
 void USignInOverlay::OnJoinGameButtonClicked()
 {
 	checkf(IsValid(PortalManager), TEXT("PortalManager is nullptr"));
+	checkf(IsValid(JoinGameWidget), TEXT("JoinGameWidget is nullptr"));
+	checkf(IsValid(JoinGameWidget->Button_JoinGame), TEXT("Button_JoinGame is nullptr"));
 	
 	PortalManager->OnJoinGameSessionMessage.AddDynamic(this, &USignInOverlay::UpdateJoinGameStatusMessage);
 	PortalManager->JoinGameSession();
@@ -29,5 +34,8 @@ void USignInOverlay::OnJoinGameButtonClicked()
 
 void USignInOverlay::UpdateJoinGameStatusMessage(const FString& Message)
 {
+	checkf(IsValid(JoinGameWidget), TEXT("JoinGameWidget is nullptr"));
+	checkf(IsValid(JoinGameWidget->Button_JoinGame), TEXT("Button_JoinGame is nullptr"));
 	JoinGameWidget->SetStatusMessage(Message);
+	JoinGameWidget->Button_JoinGame->SetIsEnabled(true);
 }

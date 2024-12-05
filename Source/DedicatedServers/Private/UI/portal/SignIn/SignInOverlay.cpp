@@ -32,10 +32,15 @@ void USignInOverlay::OnJoinGameButtonClicked()
 	JoinGameWidget->Button_JoinGame->SetIsEnabled(false);
 }
 
-void USignInOverlay::UpdateJoinGameStatusMessage(const FString& Message)
+void USignInOverlay::UpdateJoinGameStatusMessage(const FString& Message, bool bNeedRestJoinGameButton)
 {
 	checkf(IsValid(JoinGameWidget), TEXT("JoinGameWidget is nullptr"));
 	checkf(IsValid(JoinGameWidget->Button_JoinGame), TEXT("Button_JoinGame is nullptr"));
 	JoinGameWidget->SetStatusMessage(Message);
-	JoinGameWidget->Button_JoinGame->SetIsEnabled(true);
+
+	if (bNeedRestJoinGameButton)
+	{
+		JoinGameWidget->Button_JoinGame->SetIsEnabled(true);
+	}
+	
 }

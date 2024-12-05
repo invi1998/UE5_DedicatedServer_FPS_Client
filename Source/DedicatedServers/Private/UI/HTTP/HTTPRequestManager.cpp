@@ -38,14 +38,3 @@ void UHTTPRequestManager::DumpMetaData(TSharedPtr<FJsonObject> JsonObject)
 	}
 }
 
-void UHTTPRequestManager::DumpListFleetsResponse(TSharedPtr<FJsonObject> JsonObject)
-{
-	if (JsonObject->HasField(TEXT("FleetIds")))
-	{
-		// 将ListFleetsResponse转换为FDSListFleetsResponse结构
-		FDSListFleetsResponse ListFleetsResponse;
-		FJsonObjectConverter::JsonObjectToUStruct<FDSListFleetsResponse>(JsonObject.ToSharedRef(), &ListFleetsResponse, 0, 0);
-
-		ListFleetsResponse.Dump();
-	}
-}

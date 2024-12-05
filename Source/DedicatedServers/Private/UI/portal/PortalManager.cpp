@@ -4,14 +4,16 @@
 #include "UI/portal/PortalManager.h"
 
 #include "HttpModule.h"
+#include "JsonObjectConverter.h"
 #include "Data/API/APIData.h"
 #include "DedicatedServers/DedicatedServers.h"
 #include "GameplayTags/DedicatedServersTags.h"
 #include "Interfaces/IHttpResponse.h"
+#include "UI/HTTP/HTTPRequestTypes.h"
 
 void UPortalManager::JoinGameSession()
 {
-	OnJoinGameSessionMessage.Broadcast(TEXT("Searching for game session..."));
+	OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::SearchingForGameSession, false);
 
 	checkf(APIData, TEXT("APIData is nullptr"));
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
@@ -27,24 +29,29 @@ void UPortalManager::JoinGameSession()
 
 void UPortalManager::FindOrCreateGameSession_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	if (!bWasSuccessful)
+	{
+		OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+	}
+
 	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 
-	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && JsonObject.IsValid())
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && !ContainErrors(JsonObject))
 	{
-		if (UHTTPRequestManager::ContainErrors(JsonObject))
+		DumpMetaData(JsonObject);
+		if (ContainErrors(JsonObject))
 		{
-			OnJoinGameSessionMessage.Broadcast(TEXT("Failed to find or create game session"));
+			OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
 			return;
 		}
+		
+		FDSGameSession GameSession;
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &GameSession, 0, 0);
+		GameSession.Dump();
 
-		UHTTPRequestManager::DumpMetaData(JsonObject);
-
-		OnJoinGameSessionMessage.Broadcast(TEXT("Game session found or created"));
-	}
-	else
-	{
-		UE_LOG(LogDedicatedServers, Error, TEXT("FindOrCreateGameSession_Response: Failed to deserialize JSON response"));
+		OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::FindGameSessionSuccess, false);
+		
 	}
 
 }

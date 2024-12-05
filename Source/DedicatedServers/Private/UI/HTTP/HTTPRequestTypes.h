@@ -4,6 +4,16 @@
 
 #include "HTTPRequestTypes.generated.h"
 
+namespace HTTPStatusMessages
+{
+	// 定义HTTP状态消息，DEDICATEDSERVERS_API是一个宏，用于处理模块的导出和类和函数的动态链接导入
+	extern DEDICATEDSERVERS_API const FString SearchingForGameSession;	// 搜索游戏会话
+	
+	extern DEDICATEDSERVERS_API const FString SomethingWentWrong;		// 出现错误
+
+	extern DEDICATEDSERVERS_API const FString FindGameSessionSuccess;	// 找到游戏会话成功
+}
+
 USTRUCT()
 struct FDSMeataData
 {

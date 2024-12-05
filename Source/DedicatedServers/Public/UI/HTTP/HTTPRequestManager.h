@@ -23,5 +23,4 @@ public:
 
 	static void DumpMetaData(TSharedPtr<FJsonObject> JsonObject);
 
-	static void DumpListFleetsResponse(TSharedPtr<FJsonObject> JsonObject);
 };

@@ -34,6 +34,6 @@ private:
 	void OnJoinGameButtonClicked();
 
 	UFUNCTION()
-	void UpdateJoinGameStatusMessage(const FString& Message);
+	void UpdateJoinGameStatusMessage(const FString& Message, bool bNeedRestJoinGameButton);
 	
 };

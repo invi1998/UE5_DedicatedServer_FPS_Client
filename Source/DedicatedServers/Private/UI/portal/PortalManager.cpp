@@ -58,6 +58,7 @@ void UPortalManager::FindOrCreateGameSession_Response(FHttpRequestPtr Request, F
 
 void UPortalManager::CreatePlayerSession_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("CreatePlayerSession_Response"));
 }
 
 FString UPortalManager::GetUniquePlayerID() const

@@ -144,3 +144,65 @@ struct FDSGameSession
 	void Dump() const;
 };
 
+/*
+{
+   "PlayerSession": { 
+	  "CreationTime": number,
+	  "DnsName": "string",
+	  "FleetArn": "string",
+	  "FleetId": "string",
+	  "GameSessionId": "string",
+	  "IpAddress": "string",
+	  "PlayerData": "string",
+	  "PlayerId": "string",
+	  "PlayerSessionId": "string",
+	  "Port": number,
+	  "Status": "string",
+	  "TerminationTime": number
+   }
+}
+*/
+USTRUCT()
+struct FDSPlayerSession
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	int64 CreationTime{};		// 创建时间
+
+	UPROPERTY()
+	FString DnsName{};			// DNS名称
+
+	UPROPERTY()
+	FString FleetArn{};			// 舰队ARN
+
+	UPROPERTY()
+	FString FleetId{};			// 舰队ID
+
+	UPROPERTY()
+	FString GameSessionId{};		// 游戏会话ID
+
+	UPROPERTY()
+	FString IpAddress{};		// IP地址
+
+	UPROPERTY()
+	FString PlayerData{};		// 玩家数据
+
+	UPROPERTY()
+	FString PlayerId{};			// 玩家ID
+
+	UPROPERTY()
+	FString PlayerSessionId{};	// 玩家会话ID
+
+	UPROPERTY()
+	int32 Port{};				// 端口
+
+	UPROPERTY()
+	FString Status{};			// 状态
+
+	UPROPERTY()
+	int64 TerminationTime{};	// 终止时间
+
+	void Dump() const;
+};
+

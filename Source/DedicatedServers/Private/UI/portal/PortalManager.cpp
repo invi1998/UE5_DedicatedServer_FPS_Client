@@ -9,6 +9,7 @@
 #include "GameFramework/PlayerState.h"
 #include "GameplayTags/DedicatedServersTags.h"
 #include "Interfaces/IHttpResponse.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/HTTP/HTTPRequestTypes.h"
 
 void UPortalManager::JoinGameSession(bool bRetry)
@@ -37,7 +38,7 @@ void UPortalManager::FindOrCreateGameSession_Response(FHttpRequestPtr Request, F
 	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 
-	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && !ContainErrors(JsonObject))
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
 	{
 		if (ContainErrors(JsonObject))
 		{
@@ -66,7 +67,7 @@ void UPortalManager::CreatePlayerSession_Response(FHttpRequestPtr Request, FHttp
 	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 
-	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && !ContainErrors(JsonObject))
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
 	{
 		if (ContainErrors(JsonObject))
 		{
@@ -75,11 +76,14 @@ void UPortalManager::CreatePlayerSession_Response(FHttpRequestPtr Request, FHttp
 		}
 		
 		FDSPlayerSession PlayerSession;
-		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &PlayerSession, 0, 0);
-
-		PlayerSession.Dump();
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &PlayerSession);
 
 		OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::PlayerSessionCreateSuccess, false);
+
+		// 进入游戏
+		const FString IpAndPort = PlayerSession.IpAddress + FString::Printf(TEXT(":%d"), PlayerSession.Port);
+		const FName Address(*IpAndPort);
+		UGameplayStatics::OpenLevel(this, Address);
 	}
 }
 

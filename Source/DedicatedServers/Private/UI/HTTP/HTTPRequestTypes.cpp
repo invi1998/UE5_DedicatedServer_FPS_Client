@@ -8,7 +8,8 @@ namespace HTTPStatusMessages
 {
 	const FString SearchingForGameSession = TEXT("游戏会话搜索中（Searching for game session）...");
 	const FString SomethingWentWrong = TEXT("出现错误（Something went wrong）");
-	const FString FindGameSessionSuccess = TEXT("成功找到游戏会话（Find game session successful）");
+	const FString FindGameSessionSuccess = TEXT("成功找到游戏会话，正在创建玩家会话（Find game session successful, creating player session）...");
+	const FString GameSessionActivating = TEXT("游戏会话激活中（Game session activating）...");
 }
 
 void FDSMeataData::Dump() const

@@ -11,6 +11,8 @@ namespace HTTPStatusMessages
 	extern DEDICATEDSERVERS_API const FString SomethingWentWrong;		// 出现错误
 	extern DEDICATEDSERVERS_API const FString FindGameSessionSuccess;	// 找到游戏会话成功
 	extern DEDICATEDSERVERS_API const FString GameSessionActivating;	// 游戏会话激活中
+	extern DEDICATEDSERVERS_API const FString PlayerSessionCreateFailed;	// 玩家会话创建失败
+	extern DEDICATEDSERVERS_API const FString PlayerSessionCreateSuccess;	// 玩家会话创建成功
 	
 }
 
@@ -51,7 +53,7 @@ struct FDSListFleetsResponse
 /*
 {
 	"GameSession": { 
-		"CreationTime": number,
+		"CreationTime": : "string",
 		"CreatorId": "string",
 		"CurrentPlayerSessionCount": number,
 		"DnsName": "string",
@@ -74,7 +76,7 @@ struct FDSListFleetsResponse
 		"Port": number,
 		"Status": "string",
 		"StatusReason": "string",
-		"TerminationTime": number
+		"TerminationTime": "string"
 	 }
 }
 */
@@ -85,7 +87,7 @@ struct FDSGameSession
 	GENERATED_BODY()
 
 	UPROPERTY()
-	int64 CreationTime{};						// 创建时间
+	FString CreationTime{};						// 创建时间
 
 	UPROPERTY()
 	FString CreatorId{};						// 创建者ID
@@ -139,7 +141,7 @@ struct FDSGameSession
 	FString StatusReason{};						// 状态原因
 
 	UPROPERTY()
-	int64 TerminationTime{};					// 终止时间
+	FString TerminationTime{};					// 终止时间
 
 	void Dump() const;
 };
@@ -147,7 +149,7 @@ struct FDSGameSession
 /*
 {
    "PlayerSession": { 
-	  "CreationTime": number,
+	  "CreationTime": "string",
 	  "DnsName": "string",
 	  "FleetArn": "string",
 	  "FleetId": "string",
@@ -158,7 +160,7 @@ struct FDSGameSession
 	  "PlayerSessionId": "string",
 	  "Port": number,
 	  "Status": "string",
-	  "TerminationTime": number
+	  "TerminationTime": "string"
    }
 }
 */
@@ -168,7 +170,7 @@ struct FDSPlayerSession
 	GENERATED_BODY()
 
 	UPROPERTY()
-	int64 CreationTime{};		// 创建时间
+	FString CreationTime{};		// 创建时间
 
 	UPROPERTY()
 	FString DnsName{};			// DNS名称
@@ -201,7 +203,7 @@ struct FDSPlayerSession
 	FString Status{};			// 状态
 
 	UPROPERTY()
-	int64 TerminationTime{};	// 终止时间
+	FString TerminationTime{};	// 终止时间
 
 	void Dump() const;
 };

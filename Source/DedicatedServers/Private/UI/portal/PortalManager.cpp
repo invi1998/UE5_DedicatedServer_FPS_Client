@@ -58,7 +58,29 @@ void UPortalManager::FindOrCreateGameSession_Response(FHttpRequestPtr Request, F
 
 void UPortalManager::CreatePlayerSession_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("CreatePlayerSession_Response"));
+	if (!bWasSuccessful)
+	{
+		OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::PlayerSessionCreateFailed, true);
+	}
+
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject) && !ContainErrors(JsonObject))
+	{
+		if (ContainErrors(JsonObject))
+		{
+			OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+			return;
+		}
+		
+		FDSPlayerSession PlayerSession;
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &PlayerSession, 0, 0);
+
+		PlayerSession.Dump();
+
+		OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::PlayerSessionCreateSuccess, false);
+	}
 }
 
 FString UPortalManager::GetUniquePlayerID() const

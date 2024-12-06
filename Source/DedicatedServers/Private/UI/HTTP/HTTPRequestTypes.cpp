@@ -10,6 +10,8 @@ namespace HTTPStatusMessages
 	const FString SomethingWentWrong = TEXT("出现错误（Something went wrong）");
 	const FString FindGameSessionSuccess = TEXT("成功找到游戏会话，正在创建玩家会话（Find game session successful, creating player session）...");
 	const FString GameSessionActivating = TEXT("游戏会话激活中（Game session activating）...");
+	const FString PlayerSessionCreateFailed = TEXT("玩家会话创建失败（Player session create failed）");
+	const FString PlayerSessionCreateSuccess = TEXT("玩家会话创建成功，正在进入游戏（Player session create successful, entering game）...");
 }
 
 void FDSMeataData::Dump() const
@@ -35,7 +37,7 @@ void FDSListFleetsResponse::Dump() const
 void FDSGameSession::Dump() const
 {
 	UE_LOG(LogDedicatedServers, Log, TEXT("GameSession:"));
-	UE_LOG(LogDedicatedServers, Log, TEXT("	CreationTime: %lld"), CreationTime);
+	UE_LOG(LogDedicatedServers, Log, TEXT("	CreationTime: %s"), *CreationTime);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	CreatorId: %s"), *CreatorId);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	CurrentPlayerSessionCount: %d"), CurrentPlayerSessionCount);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	DnsName: %s"), *DnsName);
@@ -57,14 +59,14 @@ void FDSGameSession::Dump() const
 	UE_LOG(LogDedicatedServers, Log, TEXT("	Port: %d"), Port);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	Status: %s"), *Status);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	StatusReason: %s"), *StatusReason);
-	UE_LOG(LogDedicatedServers, Log, TEXT("	TerminationTime: %lld"), TerminationTime);
+	UE_LOG(LogDedicatedServers, Log, TEXT("	TerminationTime: %s"), *TerminationTime);
 	
 }
 
 void FDSPlayerSession::Dump() const
 {
 	UE_LOG(LogDedicatedServers, Log, TEXT("PlayerSession:"));
-	UE_LOG(LogDedicatedServers, Log, TEXT("	CreationTime: %lld"), CreationTime);
+	UE_LOG(LogDedicatedServers, Log, TEXT("	CreationTime: %s"), *CreationTime);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	DnsName: %s"), *DnsName);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	FleetArn: %s"), *FleetArn);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	FleetId: %s"), *FleetId);
@@ -75,6 +77,6 @@ void FDSPlayerSession::Dump() const
 	UE_LOG(LogDedicatedServers, Log, TEXT("	PlayerSessionId: %s"), *PlayerSessionId);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	Port: %d"), Port);
 	UE_LOG(LogDedicatedServers, Log, TEXT("	Status: %s"), *Status);
-	UE_LOG(LogDedicatedServers, Log, TEXT("	TerminationTime: %lld"), TerminationTime);
+	UE_LOG(LogDedicatedServers, Log, TEXT("	TerminationTime: %s"), *TerminationTime);
 	
 }

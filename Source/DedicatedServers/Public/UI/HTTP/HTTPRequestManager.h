@@ -23,4 +23,6 @@ public:
 
 	static void DumpMetaData(TSharedPtr<FJsonObject> JsonObject);
 
+	static FString SerializeJsonContent(const TMap<FString, FString>& Params);
+
 };

@@ -38,3 +38,21 @@ void UHTTPRequestManager::DumpMetaData(TSharedPtr<FJsonObject> JsonObject)
 	}
 }
 
+FString UHTTPRequestManager::SerializeJsonContent(const TMap<FString, FString>& Params)
+{
+	// Request->SetContentAsString(FString::Printf(TEXT("{\"gameSessionId\":\"%s\",\"playerId\":\"%s\"}"), *GameSessionId, *PlayerId));
+	// 或者通过创建一个TSharedPtr<FJsonObject>对象，然后序列化为字符串
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	for (const TPair<FString, FString>& Param : Params)
+	{
+		JsonObject->SetStringField(Param.Key, Param.Value);
+	}
+	
+	FString ContentString;
+	TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&ContentString);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	return ContentString;
+}
+

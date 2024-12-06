@@ -2,6 +2,16 @@
 
 # FPSTemplate
 
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/invi1998/MultiplayerBlasterGame/blob/main/LICENSE)
+
+[![JetBrains Logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png)](https://jb.gg/OpenSourceSupport)
+
+
+
+---
+
+
+
 该项目是一个具有基本战斗功能的第一人称射击游戏。包含的功能有：
 
 - 支持网络复制的射击游戏玩法

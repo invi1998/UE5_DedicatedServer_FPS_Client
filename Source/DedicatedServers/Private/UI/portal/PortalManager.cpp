@@ -80,6 +80,13 @@ void UPortalManager::CreatePlayerSession_Response(FHttpRequestPtr Request, FHttp
 
 		OnJoinGameSessionMessage.Broadcast(HTTPStatusMessages::PlayerSessionCreateSuccess, false);
 
+		if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
+		{
+			FInputModeGameOnly InputModeGameOnly;
+			LocalPlayerController->SetInputMode(InputModeGameOnly);
+			LocalPlayerController->SetShowMouseCursor(false);
+		}
+		
 		// 进入游戏
 		const FString IpAndPort = PlayerSession.IpAddress + FString::Printf(TEXT(":%d"), PlayerSession.Port);
 		const FName Address(*IpAndPort);

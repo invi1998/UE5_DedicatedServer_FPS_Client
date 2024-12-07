@@ -67,5 +67,21 @@ private:
 
 	UFUNCTION()
 	void ShowPassword(bool bIsChecked);
+
+	UFUNCTION()
+	void TextBox_Username_OnTextChanged(const FText& Text);
+
+	UFUNCTION()
+	void TextBox_Email_OnTextChanged(const FText& Text);
+
+	UFUNCTION()
+	void TextBox_FullName_OnTextChanged(const FText& Text);
+
+	UFUNCTION()
+	void TextBox_Password_OnTextChanged(const FText& Text);
+
+	UFUNCTION()
+	void TextBox_ConfirmPassword_OnTextChanged(const FText& Text);
 	
 };
+

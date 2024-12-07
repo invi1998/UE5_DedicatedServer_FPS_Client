@@ -5,22 +5,141 @@
 
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
+#include "Components/TextBlock.h"
 
 void USignUpPage::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	check(IsValid(TextBox_Password));
-	check(IsValid(TextBox_ConfirmPassword));
 	TextBox_Password->SetIsPassword(true);
 	TextBox_ConfirmPassword->SetIsPassword(true);
 
-	check(IsValid(CheckBox_ShowPassword));
 	CheckBox_ShowPassword->OnCheckStateChanged.AddDynamic(this, &USignUpPage::ShowPassword);
+
+	TextBox_Username->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_Username_OnTextChanged);
+	TextBox_Email->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_Email_OnTextChanged);
+	TextBox_FullName->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_FullName_OnTextChanged);
+	TextBox_Password->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_Password_OnTextChanged);
+	TextBox_ConfirmPassword->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_ConfirmPassword_OnTextChanged);
 }
 
 void USignUpPage::ShowPassword(bool bIsChecked)
 {
 	TextBox_Password->SetIsPassword(!bIsChecked);
 	TextBox_ConfirmPassword->SetIsPassword(!bIsChecked);
+}
+
+void USignUpPage::TextBox_Username_OnTextChanged(const FText& Text)
+{
+	// 校验用户名输入是否合法
+	// 长度是否在 6-20 之间
+	if (Text.IsEmpty() || Text.ToString().Len() < 6 || Text.ToString().Len() > 20)
+	{
+		// 显示错误提示
+		TextBlock_UsernameError->SetText(FText::FromString(TEXT("用户名长度必须在 6-20 之间")));
+	}
+	else
+	{
+		// 隐藏错误提示
+		TextBlock_UsernameError->SetText(FText::FromString(TEXT("")));
+	}
+}
+
+void USignUpPage::TextBox_Email_OnTextChanged(const FText& Text)
+{
+	// 校验邮箱输入是否合法
+	// 邮箱格式是否正确
+	// 定义电子邮件的正则表达式
+	const FRegexPattern EmailPattern(TEXT(R"((\w+)(\.|_)?(\w*)@(\w+)(\.(\w+))+)"));
+	FRegexMatcher EmailMatcher(EmailPattern, Text.ToString());
+	if (!EmailMatcher.FindNext())
+	{
+		// 显示错误提示
+		TextBlock_EmailError->SetText(FText::FromString(TEXT("邮箱格式不正确")));
+	}
+	else
+	{
+		// 隐藏错误提示
+		TextBlock_EmailError->SetText(FText::FromString(TEXT("")));
+	}
+}
+
+void USignUpPage::TextBox_FullName_OnTextChanged(const FText& Text)
+{
+	// 校验用户名输入是否合法
+	// 长度是否在 6-20 之间
+	if (Text.IsEmpty() || Text.ToString().Len() < 6 || Text.ToString().Len() > 20)
+	{
+		// 显示错误提示
+		TextBlock_FullNameError->SetText(FText::FromString(TEXT("用户名长度必须在 6-20 之间")));
+	}
+	else
+	{
+		// 隐藏错误提示
+		TextBlock_FullNameError->SetText(FText::FromString(TEXT("")));
+	}
+}
+
+void USignUpPage::TextBox_Password_OnTextChanged(const FText& Text)
+{
+	// Password must be at least 8 characters
+	if (Text.IsEmpty() || Text.ToString().Len() < 8)
+	{
+		// 显示错误提示
+		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码长度必须至少 8 个字符")));
+		return;
+	}
+	// Use a number
+	const FRegexPattern NumberPattern(TEXT(R"(\d+)"));
+	if (!FRegexMatcher(NumberPattern, Text.ToString()).FindNext())
+	{
+		// 显示错误提示
+		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含数字")));
+		return;
+	}
+	// Use a lowercase letter
+	const FRegexPattern LowercasePattern(TEXT(R"([a-z]+)"));
+	if (!FRegexMatcher(LowercasePattern, Text.ToString()).FindNext())
+	{
+		// 显示错误提示
+		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含小写字母")));
+		return;
+	}
+	// Use an uppercase letter
+	const FRegexPattern UppercasePattern(TEXT(R"([A-Z]+)"));
+	if (!FRegexMatcher(UppercasePattern, Text.ToString()).FindNext())
+	{
+		// 显示错误提示
+		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含大写字母")));
+		return;
+	}
+	// Use a symbol
+	const FRegexPattern SymbolPattern(TEXT(R"([!@#$%^&*()_+{}|:"<>?])"));
+	if (!FRegexMatcher(SymbolPattern, Text.ToString()).FindNext())
+	{
+		// 显示错误提示
+		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含特殊字符")));
+		return;
+	}
+	else
+	{
+		// 隐藏错误提示
+		TextBlock_PasswordError->SetText(FText::FromString(TEXT("")));
+	}
+	
+}
+
+void USignUpPage::TextBox_ConfirmPassword_OnTextChanged(const FText& Text)
+{
+	// 校验两次密码输入是否一致
+	if (Text.IsEmpty() || Text.ToString() != TextBox_Password->GetText().ToString())
+	{
+		// 显示错误提示
+		TextBlock_ConfirmPasswordError->SetText(FText::FromString(TEXT("两次密码输入不一致")));
+	}
+	else
+	{
+		// 隐藏错误提示
+		TextBlock_ConfirmPasswordError->SetText(FText::FromString(TEXT("")));
+	}
 }

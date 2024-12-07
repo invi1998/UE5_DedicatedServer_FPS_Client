@@ -4,8 +4,13 @@
 #include "UI/portal/SignIn/SignInOverlay.h"
 
 #include "Components/Button.h"
+#include "Components/WidgetSwitcher.h"
 #include "UI/API/GameSessions/JoinGame.h"
 #include "UI/portal/PortalManager.h"
+#include "UI/portal/SignIn/ConfirmAccountPage.h"
+#include "UI/portal/SignIn/SignInPage.h"
+#include "UI/portal/SignIn/SignUpPage.h"
+#include "UI/portal/SignIn/SuccessConfirmPage.h"
 
 void USignInOverlay::NativeConstruct()
 {
@@ -18,6 +23,16 @@ void USignInOverlay::NativeConstruct()
 	PortalManager = NewObject<UPortalManager>(this, PortalManagerClass);
 
 	JoinGameWidget->Button_JoinGame->OnClicked.AddDynamic(this, &USignInOverlay::OnJoinGameButtonClicked);
+
+	check(IsValid(Button_SignIn_Test));
+	Button_SignIn_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
+	check(IsValid(Button_SignUp_Test));
+	Button_SignUp_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignUpPage);
+	check(IsValid(Button_ConfirmAccount_Test));
+	Button_ConfirmAccount_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowConfirmAccountPage);
+	check(IsValid(Button_SuccessConfirm_Test));
+	Button_SuccessConfirm_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowSuccessConfirmPage);
+	
 }
 
 void USignInOverlay::OnJoinGameButtonClicked()
@@ -43,4 +58,28 @@ void USignInOverlay::UpdateJoinGameStatusMessage(const FString& Message, bool bN
 		JoinGameWidget->Button_JoinGame->SetIsEnabled(true);
 	}
 	
+}
+
+void USignInOverlay::ShowSignInPage()
+{
+	check(IsValid(WidgetSwitcher) && IsValid(SignInPage));
+	WidgetSwitcher->SetActiveWidget(SignInPage);
+}
+
+void USignInOverlay::ShowSignUpPage()
+{
+	check(IsValid(WidgetSwitcher) && IsValid(SignUpPage));
+	WidgetSwitcher->SetActiveWidget(SignUpPage);
+}
+
+void USignInOverlay::ShowConfirmAccountPage()
+{
+	check(IsValid(WidgetSwitcher) && IsValid(ConfirmAccountPage));
+	WidgetSwitcher->SetActiveWidget(ConfirmAccountPage);
+}
+
+void USignInOverlay::ShowSuccessConfirmPage()
+{
+	check(IsValid(WidgetSwitcher) && IsValid(SuccessConfirmPage));
+	WidgetSwitcher->SetActiveWidget(SuccessConfirmPage);
 }

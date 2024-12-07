@@ -20,10 +20,16 @@ class DEDICATEDSERVERS_API UPortalManager : public UHTTPRequestManager
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnBroadcastJoinGameSessionMessage OnJoinGameSessionMessage;
+
+	UFUNCTION()
+	void QuitGame();
 	
 	void JoinGameSession(bool bRetry = false);
-
-
+	void SignIn(const FString& Username, const FString& Password);
+	void SignUp(const FString& Username, const FString& Email, const FString& FullName, const FString& Password);
+	void ConfirmAccount(const FString& Code);
+	void ResendCode();
+	
 private:
 	/** 
 	 * @brief 处理游戏会话响应

@@ -59,5 +59,13 @@ public:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_SignIn;	// 登录按钮
+
+protected:
+	virtual void NativeConstruct() override;
+
+private:
+
+	UFUNCTION()
+	void ShowPassword(bool bIsChecked);
 	
 };

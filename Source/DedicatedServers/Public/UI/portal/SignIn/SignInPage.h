@@ -43,4 +43,12 @@ public:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_Exit;	// 退出按钮
+
+protected:
+	virtual void NativeConstruct() override;
+
+private:
+
+	UFUNCTION()
+	void ShowPassword(bool bIsChecked);
 };

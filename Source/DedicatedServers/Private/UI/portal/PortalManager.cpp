@@ -12,6 +12,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/HTTP/HTTPRequestTypes.h"
 
+void UPortalManager::QuitGame()
+{
+	if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
+	{
+		UKismetSystemLibrary::QuitGame(this, LocalPlayerController, EQuitPreference::Quit, false);
+	}
+}
+
 void UPortalManager::JoinGameSession(bool bRetry)
 {
 	OnJoinGameSessionMessage.Broadcast(bRetry ? HTTPStatusMessages::GameSessionActivating : HTTPStatusMessages::SearchingForGameSession, false);
@@ -26,6 +34,22 @@ void UPortalManager::JoinGameSession(bool bRetry)
 	Request->OnProcessRequestComplete().BindUObject(this, &UPortalManager::FindOrCreateGameSession_Response);
 
 	Request->ProcessRequest();
+}
+
+void UPortalManager::SignIn(const FString& Username, const FString& Password)
+{
+}
+
+void UPortalManager::SignUp(const FString& Username, const FString& Email, const FString& FullName, const FString& Password)
+{
+}
+
+void UPortalManager::ConfirmAccount(const FString& Code)
+{
+}
+
+void UPortalManager::ResendCode()
+{
 }
 
 void UPortalManager::FindOrCreateGameSession_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)

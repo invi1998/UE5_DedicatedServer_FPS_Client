@@ -87,5 +87,20 @@ private:
 
 	UFUNCTION()
 	void ShowJoinGamePage();
+
+	UFUNCTION()
+	void SignInButtonClicked();
+
+	UFUNCTION()
+	void SignUpButtonClicked();
+
+	UFUNCTION()
+	void ConfirmAccountButtonClicked();
+
+	UFUNCTION()
+	void ResendCodeButtonClicked();
+
+	UFUNCTION()
+	void OKButtonClicked();
 	
 };

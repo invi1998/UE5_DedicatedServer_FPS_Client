@@ -82,6 +82,13 @@ private:
 
 	UFUNCTION()
 	void TextBox_ConfirmPassword_OnTextChanged(const FText& Text);
+
+	bool bTextBlock_UsernameIsValidate = false;
+	bool bTextBlock_EmailIsValidate = false;
+	bool bTextBlock_FullNameIsValidate = false;
+	bool bTextBlock_PasswordIsValidate = false;
+	bool bTextBlock_ConfirmPasswordIsValidate = false;
+	
 	
 };
 

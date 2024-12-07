@@ -3,6 +3,7 @@
 
 #include "UI/portal/SignIn/SignUpPage.h"
 
+#include "Components/Button.h"
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
@@ -21,6 +22,8 @@ void USignUpPage::NativeConstruct()
 	TextBox_FullName->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_FullName_OnTextChanged);
 	TextBox_Password->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_Password_OnTextChanged);
 	TextBox_ConfirmPassword->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_ConfirmPassword_OnTextChanged);
+
+	Button_SignUp->SetIsEnabled(false);
 }
 
 void USignUpPage::ShowPassword(bool bIsChecked)
@@ -37,11 +40,15 @@ void USignUpPage::TextBox_Username_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_UsernameError->SetText(FText::FromString(TEXT("用户名长度必须在 6-20 之间")));
+		bTextBlock_UsernameIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 	}
 	else
 	{
 		// 隐藏错误提示
 		TextBlock_UsernameError->SetText(FText::FromString(TEXT("")));
+		bTextBlock_UsernameIsValidate = true;
+		Button_SignUp->SetIsEnabled(bTextBlock_UsernameIsValidate && bTextBlock_EmailIsValidate && bTextBlock_FullNameIsValidate && bTextBlock_PasswordIsValidate && bTextBlock_ConfirmPasswordIsValidate);
 	}
 }
 
@@ -56,11 +63,15 @@ void USignUpPage::TextBox_Email_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_EmailError->SetText(FText::FromString(TEXT("邮箱格式不正确")));
+		bTextBlock_EmailIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 	}
 	else
 	{
 		// 隐藏错误提示
 		TextBlock_EmailError->SetText(FText::FromString(TEXT("")));
+		bTextBlock_EmailIsValidate = true;
+		Button_SignUp->SetIsEnabled(bTextBlock_UsernameIsValidate && bTextBlock_EmailIsValidate && bTextBlock_FullNameIsValidate && bTextBlock_PasswordIsValidate && bTextBlock_ConfirmPasswordIsValidate);
 	}
 }
 
@@ -72,11 +83,15 @@ void USignUpPage::TextBox_FullName_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_FullNameError->SetText(FText::FromString(TEXT("用户名长度必须在 6-20 之间")));
+		bTextBlock_FullNameIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 	}
 	else
 	{
 		// 隐藏错误提示
 		TextBlock_FullNameError->SetText(FText::FromString(TEXT("")));
+		bTextBlock_FullNameIsValidate = true;
+		Button_SignUp->SetIsEnabled(bTextBlock_UsernameIsValidate && bTextBlock_EmailIsValidate && bTextBlock_FullNameIsValidate && bTextBlock_PasswordIsValidate && bTextBlock_ConfirmPasswordIsValidate);
 	}
 }
 
@@ -87,6 +102,8 @@ void USignUpPage::TextBox_Password_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码长度必须至少 8 个字符")));
+		bTextBlock_PasswordIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 		return;
 	}
 	// Use a number
@@ -95,6 +112,8 @@ void USignUpPage::TextBox_Password_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含数字")));
+		bTextBlock_PasswordIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 		return;
 	}
 	// Use a lowercase letter
@@ -103,6 +122,8 @@ void USignUpPage::TextBox_Password_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含小写字母")));
+		bTextBlock_PasswordIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 		return;
 	}
 	// Use an uppercase letter
@@ -111,6 +132,8 @@ void USignUpPage::TextBox_Password_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含大写字母")));
+		bTextBlock_PasswordIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 		return;
 	}
 	// Use a symbol
@@ -119,12 +142,16 @@ void USignUpPage::TextBox_Password_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_PasswordError->SetText(FText::FromString(TEXT("密码必须包含特殊字符")));
+		bTextBlock_PasswordIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 		return;
 	}
 	else
 	{
 		// 隐藏错误提示
 		TextBlock_PasswordError->SetText(FText::FromString(TEXT("")));
+		bTextBlock_PasswordIsValidate = true;
+		Button_SignUp->SetIsEnabled(bTextBlock_UsernameIsValidate && bTextBlock_EmailIsValidate && bTextBlock_FullNameIsValidate && bTextBlock_PasswordIsValidate && bTextBlock_ConfirmPasswordIsValidate);
 	}
 	
 }
@@ -136,10 +163,14 @@ void USignUpPage::TextBox_ConfirmPassword_OnTextChanged(const FText& Text)
 	{
 		// 显示错误提示
 		TextBlock_ConfirmPasswordError->SetText(FText::FromString(TEXT("两次密码输入不一致")));
+		bTextBlock_ConfirmPasswordIsValidate = false;
+		Button_SignUp->SetIsEnabled(false);
 	}
 	else
 	{
 		// 隐藏错误提示
 		TextBlock_ConfirmPasswordError->SetText(FText::FromString(TEXT("")));
+		bTextBlock_ConfirmPasswordIsValidate = true;
+		Button_SignUp->SetIsEnabled(bTextBlock_UsernameIsValidate && bTextBlock_EmailIsValidate && bTextBlock_FullNameIsValidate && bTextBlock_PasswordIsValidate && bTextBlock_ConfirmPasswordIsValidate);
 	}
 }

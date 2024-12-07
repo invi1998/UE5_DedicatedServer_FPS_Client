@@ -60,6 +60,9 @@ private:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_SuccessConfirm_Test;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UButton> Button_JoinGame_Test;
 	
 	UPROPERTY()
 	TObjectPtr<UPortalManager> PortalManager;
@@ -81,5 +84,8 @@ private:
 
 	UFUNCTION()
 	void ShowSuccessConfirmPage();
+
+	UFUNCTION()
+	void ShowJoinGamePage();
 	
 };

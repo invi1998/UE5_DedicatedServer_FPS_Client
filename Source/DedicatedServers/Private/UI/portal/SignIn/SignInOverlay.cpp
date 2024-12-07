@@ -32,6 +32,8 @@ void USignInOverlay::NativeConstruct()
 	Button_ConfirmAccount_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowConfirmAccountPage);
 	check(IsValid(Button_SuccessConfirm_Test));
 	Button_SuccessConfirm_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowSuccessConfirmPage);
+	check(IsValid(Button_JoinGame_Test));
+	Button_JoinGame_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowJoinGamePage);
 	
 }
 
@@ -82,4 +84,10 @@ void USignInOverlay::ShowSuccessConfirmPage()
 {
 	check(IsValid(WidgetSwitcher) && IsValid(SuccessConfirmPage));
 	WidgetSwitcher->SetActiveWidget(SuccessConfirmPage);
+}
+
+void USignInOverlay::ShowJoinGamePage()
+{
+	check(IsValid(WidgetSwitcher) && IsValid(JoinGameWidget));
+	WidgetSwitcher->SetActiveWidget(JoinGameWidget);
 }

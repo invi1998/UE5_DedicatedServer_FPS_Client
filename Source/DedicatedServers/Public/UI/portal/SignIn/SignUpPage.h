@@ -34,6 +34,12 @@ public:
 	TObjectPtr<UTextBlock> TextBlock_EmailError;	// 邮箱错误提示
 
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UEditableTextBox> TextBox_FullName;	// 全名输入框
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UTextBlock> TextBlock_FullNameError;	// 全名错误提示
+
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UEditableTextBox> TextBox_Password;	// 密码输入框
 
 	UPROPERTY(meta=(BindWidget))

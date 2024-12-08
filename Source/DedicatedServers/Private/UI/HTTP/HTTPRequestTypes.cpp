@@ -12,6 +12,10 @@ namespace HTTPStatusMessages
 	const FString GameSessionActivating = TEXT("游戏会话激活中（Game session activating）...");
 	const FString PlayerSessionCreateFailed = TEXT("玩家会话创建失败（Player session create failed）");
 	const FString PlayerSessionCreateSuccess = TEXT("玩家会话创建成功，正在进入游戏（Player session create successful, entering game）...");
+
+	const FString SignInUp = TEXT("注册（Sign up）");
+	const FString ConfirmAccount = TEXT("确认（Confirm account）");
+	const FString SignIn = TEXT("登录（Sign in）");
 }
 
 void FDSMeataData::Dump() const
@@ -136,9 +140,9 @@ void FDSInitiateAuthResponse::Dump() const
 		UE_LOG(LogDedicatedServers, Log, TEXT("	  %s"), *AvailableChallenge);
 	}
 	UE_LOG(LogDedicatedServers, Log, TEXT("	ChallengeName: %s"), *ChallengeName);
-	for (const TPair<FString, FString>& ChallengeParameters : ChallengeParameters)
+	for (const TPair<FString, FString>& Parameter : ChallengeParameters)
 	{
-		UE_LOG(LogDedicatedServers, Log, TEXT("	  %s: %s"), *ChallengeParameters.Key, *ChallengeParameters.Value);
+		UE_LOG(LogDedicatedServers, Log, TEXT("	  %s: %s"), *Parameter.Key, *Parameter.Value);
 	}
 	UE_LOG(LogDedicatedServers, Log, TEXT("	Session: %s"), *Session);
 }

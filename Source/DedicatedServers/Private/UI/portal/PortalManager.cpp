@@ -4,8 +4,11 @@
 #include "UI/portal/PortalManager.h"
 
 #include "HttpModule.h"
+#include "JsonObjectConverter.h"
 #include "Data/API/APIData.h"
+#include "Interfaces/IHttpResponse.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/HTTP/HTTPRequestTypes.h"
 
 void UPortalManager::QuitGame()
 {
@@ -40,6 +43,7 @@ void UPortalManager::SignIn(const FString& Username, const FString& Password)
 
 void UPortalManager::SignUp(const FString& Username, const FString& Email, const FString& FullName, const FString& Password)
 {
+	OnSignUpStatusMessageDelegate.Broadcast(TEXT("Signing up..."), false);
 	checkf(APIData, TEXT("APIData is nullptr"));
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
 	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignUp);
@@ -96,6 +100,32 @@ void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 
 void UPortalManager::SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	if (!bWasSuccessful)
+	{
+		OnSignUpStatusMessageDelegate.Broadcast(TEXT("新用户注册失败 （Sign up failed）"), true);
+		return;
+	}
+
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+	{
+		if (ContainErrors(JsonObject))
+		{
+			OnSignUpStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+			return;
+		}
+		
+		FDSSignUpResponse SignUpResponse;
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &SignUpResponse);
+		SignUpResponse.Dump();
+
+		OnSignUpStatusMessageDelegate.Broadcast("注册成功，正在发送验证码（Sign up successful, sending code）...", false);
+
+		
+		
+	}
 }
 
 void UPortalManager::ConfirmAccount_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)

@@ -13,7 +13,11 @@ namespace HTTPStatusMessages
 	extern DEDICATEDSERVERS_API const FString GameSessionActivating;	// 游戏会话激活中
 	extern DEDICATEDSERVERS_API const FString PlayerSessionCreateFailed;	// 玩家会话创建失败
 	extern DEDICATEDSERVERS_API const FString PlayerSessionCreateSuccess;	// 玩家会话创建成功
-	
+
+	// 部分UI文本
+	extern DEDICATEDSERVERS_API const FString SignInUp;	// 注册
+	extern DEDICATEDSERVERS_API const FString ConfirmAccount;	// 确认账户
+	extern DEDICATEDSERVERS_API const FString SignIn;	// 登录
 }
 
 USTRUCT()

@@ -16,6 +16,8 @@ class DEDICATEDSERVERS_API UPortalManager : public UHTTPRequestManager
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(BlueprintAssignable)
+	FAPIStatusMessage OnSignUpStatusMessageDelegate;
 
 	UFUNCTION()
 	void QuitGame();

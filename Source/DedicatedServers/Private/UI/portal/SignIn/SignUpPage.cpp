@@ -8,6 +8,23 @@
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
 
+void USignUpPage::UpdateStatusMessage(const FString& StatusMessage, bool bNeedRestButton)
+{
+	if (bNeedRestButton)
+	{
+		Button_SignUp->SetIsEnabled(true);
+	}
+
+	// 如果按钮有子控件，可以通过以下方式设置按钮的文本
+	if (Button_SignUp->GetChildrenCount() > 0)
+	{
+		if (UTextBlock* TextBlock = Cast<UTextBlock>(Button_SignUp->GetChildAt(0)))
+		{
+			TextBlock->SetText(FText::FromString(StatusMessage));
+		}
+	}
+}
+
 void USignUpPage::NativeConstruct()
 {
 	Super::NativeConstruct();

@@ -60,6 +60,9 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_SignIn;	// 登录按钮
 
+	UFUNCTION()
+	void UpdateStatusMessage(const FString& StatusMessage, bool bNeedRestButton);
+
 protected:
 	virtual void NativeConstruct() override;
 

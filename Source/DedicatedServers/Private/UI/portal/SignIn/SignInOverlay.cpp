@@ -29,10 +29,10 @@ void USignInOverlay::NativeConstruct()
 	SignInPage->Button_SignIn->OnClicked.AddDynamic(this, &USignInOverlay::SignInButtonClicked);
 	SignInPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignUpPage);
 	SignInPage->Button_Exit->OnClicked.AddDynamic(PortalManager, &UPortalManager::QuitGame);
-
-
+	
 	SignUpPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::SignUpButtonClicked);
 	SignUpPage->Button_SignIn->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
+	PortalManager->OnSignUpStatusMessageDelegate.AddDynamic(SignUpPage, &USignUpPage::UpdateStatusMessage);
 	
 	ConfirmAccountPage->Button_ConfirmAccount->OnClicked.AddDynamic(this, &USignInOverlay::ConfirmAccountButtonClicked);
 	ConfirmAccountPage->Button_Back->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
@@ -80,7 +80,8 @@ void USignInOverlay::SignUpButtonClicked()
 void USignInOverlay::ConfirmAccountButtonClicked()
 {
 	const FString Code = ConfirmAccountPage->TextBox_Code->GetText().ToString();
-	PortalManager->ConfirmAccount(Code);
+	const FString Username = SignUpPage->TextBox_Username->GetText().ToString();
+	PortalManager->ConfirmAccount(Code, Username);
 }
 
 void USignInOverlay::ResendCodeButtonClicked()

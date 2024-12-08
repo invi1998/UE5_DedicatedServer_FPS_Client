@@ -91,7 +91,7 @@ private:
 	void OKButtonClicked();
 
 	UFUNCTION()
-	void OnSignUiSuccessed();
+	void OnSignUpSuccessed();
 
 	UFUNCTION()
 	void OnConfirmAccountSuccessed();

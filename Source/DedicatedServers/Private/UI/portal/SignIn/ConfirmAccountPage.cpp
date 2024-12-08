@@ -89,6 +89,8 @@ void UConfirmAccountPage::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	TextBox_Code->OnTextChanged.AddDynamic(this, &UConfirmAccountPage::TextBox_Code_OnTextChanged);
+
 	Button_ResendCode->SetIsEnabled(false);
 	Button_ConfirmAccount->SetIsEnabled(false);
 	TextBox_Code->SetIsEnabled(true);

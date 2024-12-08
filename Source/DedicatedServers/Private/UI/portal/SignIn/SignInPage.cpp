@@ -13,7 +13,7 @@ void USignInPage::ResetButtonText(const FString& text) const
 {
 	if (Button_SignIn->GetChildrenCount() > 0)
 	{
-		if (UTextBlock* TextBlock = Cast<UTextBlock>(Button_SignUp->GetChildAt(0)))
+		if (UTextBlock* TextBlock = Cast<UTextBlock>(Button_SignIn->GetChildAt(0)))
 		{
 			FString buttonText = text.IsEmpty() ? HTTPStatusMessages::SignIn : text;
 			TextBlock->SetText(FText::FromString(buttonText));

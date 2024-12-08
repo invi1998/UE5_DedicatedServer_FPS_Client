@@ -34,13 +34,13 @@ void USignInOverlay::NativeConstruct()
 	SignUpPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::SignUpButtonClicked);
 	SignUpPage->Button_SignIn->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
 	PortalManager->OnSignUpStatusMessageDelegate.AddDynamic(SignUpPage, &USignUpPage::UpdateStatusMessage);
-	PortalManager->OnSignUpCompleteDelegate.AddDynamic(this, &USignInOverlay::OnSignUiSuccessed);
+	PortalManager->OnSignUpCompleteDelegate.AddDynamic(this, &USignInOverlay::OnSignUpSuccessed);
 	
 	ConfirmAccountPage->Button_ConfirmAccount->OnClicked.AddDynamic(this, &USignInOverlay::ConfirmAccountButtonClicked);
 	ConfirmAccountPage->Button_Back->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
 	ConfirmAccountPage->Button_ResendCode->OnClicked.AddDynamic(this, &USignInOverlay::ResendCodeButtonClicked);
 	PortalManager->OnConfirmAccountStatusMessageDelegate.AddDynamic(ConfirmAccountPage, &UConfirmAccountPage::UpdateStatusMessage);
-	PortalManager->OnConfirmAccountCompleteDelegate.AddDynamic(this, &USignInOverlay::OnSignUiSuccessed);
+	PortalManager->OnConfirmAccountCompleteDelegate.AddDynamic(this, &USignInOverlay::OnConfirmAccountSuccessed);
 	
 	SuccessConfirmPage->Button_OK->OnClicked.AddDynamic(this, &USignInOverlay::OKButtonClicked);
 
@@ -111,10 +111,13 @@ void USignInOverlay::OKButtonClicked()
 	SignInPage->TextBox_Username->SetText(FText::FromString(PortalManager->LastSignUpUsername));
 	SignInPage->TextBox_Password->SetText(FText::FromString(PortalManager->LastSignUpPassword));
 	ShowSignInPage();
+	SignInPage->Button_SignIn->SetIsEnabled(true);
 }
 
-void USignInOverlay::OnSignUiSuccessed()
+void USignInOverlay::OnSignUpSuccessed()
 {
+	ShowConfirmAccountPage();
+	
 	ConfirmAccountPage->Rest();
 
 	// 组装邮件发送成功提示，格式如下：
@@ -124,10 +127,8 @@ void USignInOverlay::OnSignUiSuccessed()
 	// 中文提示
 	const FString InfoCN = FString::Printf(TEXT("我们已经向邮件 %s 发送了一条验证码消息。要确认您的帐户，请输入代码。"), *DestinationEmail);
 	// 中英文提示
-	const FString InfoFinal = FString::Printf(TEXT("%s\n%s"), *InfoCN, *Info);
+	const FString InfoFinal = FString::Printf(TEXT("%s\n\n%s"), *InfoCN, *Info);
 	
-	ShowSuccessConfirmPage();
-
 	ConfirmAccountPage->TextBlock_Info->SetText(FText::FromString(InfoFinal));
 
 	// 每1分钟，允许重新发送验证码，然后每秒更新一次重发按钮的文本

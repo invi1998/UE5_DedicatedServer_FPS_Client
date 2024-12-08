@@ -42,7 +42,7 @@ void UPortalManager::SignIn(const FString& Username, const FString& Password)
 
 void UPortalManager::SignUp(const FString& Username, const FString& Email, const FString& FullName, const FString& Password)
 {
-	OnSignUpStatusMessageDelegate.Broadcast(TEXT("Signing up..."), false);
+	OnSignUpStatusMessageDelegate.Broadcast(TEXT("账号注册中（Signing up）..."), false);
 	checkf(APIData, TEXT("APIData is nullptr"));
 
 	LastSignUpUsername = Username;
@@ -122,24 +122,10 @@ void UPortalManager::SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 		}
 
 		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &LastSignUpResponse);
-
-		OnSignUpStatusMessageDelegate.Broadcast("注册成功，正在发送验证码（Sign up successful, sending code）...", false);
-
+		
 		// 切换到验证码页面
 		// 等待2S，然后切换到验证码页面
-		FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this]()
-		{
-			OnSignUpCompleteDelegate.Broadcast();
-			// 删除定时器
-			if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
-			{
-				LocalPlayerController->GetWorldTimerManager().ClearTimer(SwitchToConfirmAccountPageTimerHandle);
-			}
-		});
-		if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
-		{
-			LocalPlayerController->GetWorldTimerManager().SetTimer(SwitchToConfirmAccountPageTimerHandle, TimerDelegate, 1.f, false);
-		}
+		OnSignUpCompleteDelegate.Broadcast();
 	}
 }
 
@@ -160,7 +146,7 @@ void UPortalManager::ConfirmAccount_Response(FHttpRequestPtr Request, FHttpRespo
 		{
 			if (JsonObject->HasField(TEXT("name")) && JsonObject->GetStringField(TEXT("name")).Equals(TEXT("CodeMismatchException")))
 			{
-				const FString ErrorMessage = JsonObject->GetStringField(TEXT("验证码错误，请重新输入（Code mismatch, please try again）"));
+				const FString ErrorMessage{"验证码错误，请重新输入（Code mismatch, please try again）"};
 				OnConfirmAccountStatusMessageDelegate.Broadcast(ErrorMessage, true);
 				return;
 			}

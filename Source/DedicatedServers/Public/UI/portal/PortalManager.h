@@ -48,6 +48,7 @@ public:
 
 	FDSSignUpResponse LastSignUpResponse{};
 	FString LastSignUpUsername{};
+	FString LastSignUpPassword{};
 
 private:
 	void SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);

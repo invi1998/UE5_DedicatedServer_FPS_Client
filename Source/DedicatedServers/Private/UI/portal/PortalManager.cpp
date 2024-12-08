@@ -46,6 +46,7 @@ void UPortalManager::SignUp(const FString& Username, const FString& Email, const
 	checkf(APIData, TEXT("APIData is nullptr"));
 
 	LastSignUpUsername = Username;
+	LastSignUpPassword = Password;
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
 	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignUp);
 	Request->SetURL(API_url);
@@ -129,10 +130,15 @@ void UPortalManager::SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 		FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this]()
 		{
 			OnSignUpCompleteDelegate.Broadcast();
+			// 删除定时器
+			if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
+			{
+				LocalPlayerController->GetWorldTimerManager().ClearTimer(SwitchToConfirmAccountPageTimerHandle);
+			}
 		});
 		if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
 		{
-			LocalPlayerController->GetWorldTimerManager().SetTimer(SwitchToConfirmAccountPageTimerHandle, TimerDelegate, 2.f, false);
+			LocalPlayerController->GetWorldTimerManager().SetTimer(SwitchToConfirmAccountPageTimerHandle, TimerDelegate, 1.f, false);
 		}
 	}
 }
@@ -152,12 +158,21 @@ void UPortalManager::ConfirmAccount_Response(FHttpRequestPtr Request, FHttpRespo
 	{
 		if (ContainErrors(JsonObject))
 		{
-			OnConfirmAccountStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
-			return;
+			if (JsonObject->HasField(TEXT("name")) && JsonObject->GetStringField(TEXT("name")).Equals(TEXT("CodeMismatchException")))
+			{
+				const FString ErrorMessage = JsonObject->GetStringField(TEXT("验证码错误，请重新输入（Code mismatch, please try again）"));
+				OnConfirmAccountStatusMessageDelegate.Broadcast(ErrorMessage, true);
+				return;
+			}
+			else
+			{
+				OnConfirmAccountStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+				return;
+			}
 		}
 
 		OnConfirmAccountStatusMessageDelegate.Broadcast("账户确认成功（Account confirmed）...", false);
-		
+		OnConfirmAccountCompleteDelegate.Broadcast();
 	}
 }
 

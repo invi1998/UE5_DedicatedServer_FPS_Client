@@ -108,6 +108,8 @@ void USignInOverlay::ResendCodeButtonClicked()
 
 void USignInOverlay::OKButtonClicked()
 {
+	SignInPage->TextBox_Username->SetText(FText::FromString(PortalManager->LastSignUpUsername));
+	SignInPage->TextBox_Password->SetText(FText::FromString(PortalManager->LastSignUpPassword));
 	ShowSignInPage();
 }
 

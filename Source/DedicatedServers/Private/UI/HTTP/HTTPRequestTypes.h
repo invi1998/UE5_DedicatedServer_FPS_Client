@@ -208,3 +208,155 @@ struct FDSPlayerSession
 	void Dump() const;
 };
 
+/*
+*
+* 注册HTTP回文
+{
+   "CodeDeliveryDetails": { 
+	  "AttributeName": "string",
+	  "DeliveryMedium": "string",
+	  "Destination": "string"
+   },
+   "Session": "string",
+   "UserConfirmed": boolean,
+   "UserSub": "string"
+}
+ */
+USTRUCT()
+struct FDSCodeDeliveryDetails
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString AttributeName{};	// 属性名称
+
+	UPROPERTY()
+	FString DeliveryMedium{};	// 交付介质
+
+	UPROPERTY()
+	FString Destination{};		// 目的地
+
+	void Dump() const;
+};
+
+USTRUCT()
+struct FDSSignUpResponse
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FDSCodeDeliveryDetails CodeDeliveryDetails;	// 代码交付细节
+
+	UPROPERTY()
+	FString Session{};			// 会话
+
+	UPROPERTY()
+	bool UserConfirmed{};		// 用户确认
+
+	UPROPERTY()
+	FString UserSub{};			// 用户子
+	
+	void Dump() const;
+};
+
+/*
+ * 确认账户请求回文
+{
+   "Session": "string"
+}
+ */
+USTRUCT()
+struct FDSConfirmAccountResponse
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString Session{};	// 会话
+
+	void Dump() const;
+};
+
+/*
+ * 登录请求回文
+{
+   "AuthenticationResult": { 
+	  "AccessToken": "string",
+	  "ExpiresIn": number,
+	  "IdToken": "string",
+	  "NewDeviceMetadata": { 
+		 "DeviceGroupKey": "string",
+		 "DeviceKey": "string"
+	  },
+	  "RefreshToken": "string",
+	  "TokenType": "string"
+   },
+   "AvailableChallenges": [ "string" ],
+   "ChallengeName": "string",
+   "ChallengeParameters": { 
+	  "string" : "string" 
+   },
+   "Session": "string"
+}
+ */
+USTRUCT()
+struct FDSNewDeviceMetadata
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString DeviceGroupKey{};	// 设备组键
+
+	UPROPERTY()
+	FString DeviceKey{};		// 设备键
+
+	void Dump() const;
+};
+
+USTRUCT()
+struct FDSAuthenticationResult
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString AccessToken{};	// 访问令牌
+
+	UPROPERTY()
+	int32 ExpiresIn{};		// 过期时间
+
+	UPROPERTY()
+	FString IdToken{};		// ID令牌
+
+	UPROPERTY()
+	FString RefreshToken{};	// 刷新令牌
+
+	UPROPERTY()
+	FString TokenType{};		// 令牌类型
+
+	UPROPERTY()
+	FDSNewDeviceMetadata NewDeviceMetadata;	// 新设备元数据
+
+	void Dump() const;
+};
+
+USTRUCT()
+struct FDSInitiateAuthResponse
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FDSAuthenticationResult AuthenticationResult;	// 认证结果
+
+	UPROPERTY()
+	TArray<FString> AvailableChallenges;			// 可用挑战
+
+	UPROPERTY()
+	FString ChallengeName{};						// 挑战名称
+
+	UPROPERTY()
+	TMap<FString, FString> ChallengeParameters;	// 挑战参数
+
+	UPROPERTY()
+	FString Session{};							// 会话
+
+	void Dump() const;
+};

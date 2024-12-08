@@ -7,6 +7,8 @@
 #include "HTTPRequestManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAPIStatusMessage, const FString&, StatusMessage, bool, bNeedRestButton);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAPIRequestComplete);
+
 
 class UAPIData;
 /**

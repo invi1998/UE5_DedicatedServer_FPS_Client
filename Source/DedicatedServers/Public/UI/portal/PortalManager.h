@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Interfaces/IHttpRequest.h"
 #include "UI/HTTP/HTTPRequestManager.h"
+#include "UI/HTTP/HTTPRequestTypes.h"
 #include "PortalManager.generated.h"
 
 /**
@@ -22,6 +23,21 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FAPIStatusMessage OnSignInStatusMessageDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FAPIStatusMessage OnConfirmAccountStatusMessageDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FAPIRequestComplete OnSignUpCompleteDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FAPIRequestComplete OnSignInCompleteDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FAPIRequestComplete OnConfirmAccountCompleteDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FAPIRequestComplete OnSuccessConfirmCompleteDelegate;
+	
 	UFUNCTION()
 	void QuitGame();
 	
@@ -30,6 +46,8 @@ public:
 	void ConfirmAccount(const FString& Code, const FString& Username);
 	void ResendCode();
 
+	FDSSignUpResponse LastSignUpResponse{};
+	FString LastSignUpUsername{};
 
 private:
 	void SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
@@ -37,5 +55,7 @@ private:
 	void SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	void ConfirmAccount_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+	FTimerHandle SwitchToConfirmAccountPageTimerHandle;
 	
 };

@@ -32,6 +32,7 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 
 private:
 	UPROPERTY(meta=(BindWidget))
@@ -88,5 +89,14 @@ private:
 
 	UFUNCTION()
 	void OKButtonClicked();
+
+	UFUNCTION()
+	void OnSignUiSuccessed();
+
+	UFUNCTION()
+	void OnConfirmAccountSuccessed();
+
+	FTimerHandle ResendCodeTimerHandle;
+	int32 ResendCodeCountdown{60};
 	
 };

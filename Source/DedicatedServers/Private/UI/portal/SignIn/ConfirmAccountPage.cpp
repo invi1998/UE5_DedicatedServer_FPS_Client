@@ -4,6 +4,7 @@
 #include "UI/portal/SignIn/ConfirmAccountPage.h"
 
 #include "Components/Button.h"
+#include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
 #include "UI/HTTP/HTTPRequestTypes.h"
 
@@ -52,6 +53,31 @@ void UConfirmAccountPage::RestResendCodeButtonText(const FString& text) const
 			FString buttonText = text.IsEmpty() ? HTTPStatusMessages::ResendCode : text;
 			TextBlock->SetText(FText::FromString(buttonText));
 		}
+	}
+}
+
+void UConfirmAccountPage::Rest()
+{
+	TextBlock_Info->SetText(FText::FromString(TEXT("")));
+	TextBox_Code->SetText(FText::FromString(TEXT("")));
+	TextBlock_CodeError->SetText(FText::FromString(TEXT("")));
+	Button_ConfirmAccount->SetIsEnabled(false);
+	Button_ResendCode->SetIsEnabled(false);
+	RestConfirmButtonText();
+	RestResendCodeButtonText();
+}
+
+void UConfirmAccountPage::UpdateStatusMessage(const FString& StatusMessage, bool bNeedRestButton)
+{
+	if (bNeedRestButton)
+	{
+		Button_ConfirmAccount->SetIsEnabled(true);
+		TextBlock_CodeError->SetText(FText::FromString(StatusMessage));
+		RestConfirmButtonText();
+	}
+	else
+	{
+		RestConfirmButtonText(StatusMessage);
 	}
 }
 

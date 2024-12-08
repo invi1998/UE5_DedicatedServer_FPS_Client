@@ -45,6 +45,11 @@ public:
 
 	void RestResendCodeButtonText(const FString& text = "") const;
 
+	void Rest();
+
+	UFUNCTION()
+	void UpdateStatusMessage(const FString& StatusMessage, bool bNeedRestButton);
+
 private:
 	virtual void NativeConstruct() override;
 	

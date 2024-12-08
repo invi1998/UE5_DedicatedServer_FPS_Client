@@ -8,7 +8,6 @@
 #include "Data/API/APIData.h"
 #include "Interfaces/IHttpResponse.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/HTTP/HTTPRequestTypes.h"
 
 void UPortalManager::QuitGame()
 {
@@ -45,6 +44,8 @@ void UPortalManager::SignUp(const FString& Username, const FString& Email, const
 {
 	OnSignUpStatusMessageDelegate.Broadcast(TEXT("Signing up..."), false);
 	checkf(APIData, TEXT("APIData is nullptr"));
+
+	LastSignUpUsername = Username;
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
 	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignUp);
 	Request->SetURL(API_url);
@@ -58,7 +59,7 @@ void UPortalManager::SignUp(const FString& Username, const FString& Email, const
 		{TEXT("name"), FullName},
 		{TEXT("password"), Password}
 	};
-
+	
 	const FString ContentString = SerializeJsonContent(Params);
 	Request->SetContentAsString(ContentString);
 
@@ -116,20 +117,46 @@ void UPortalManager::SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 			OnSignUpStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
 			return;
 		}
-		
-		FDSSignUpResponse SignUpResponse;
-		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &SignUpResponse);
-		SignUpResponse.Dump();
+
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &LastSignUpResponse);
 
 		OnSignUpStatusMessageDelegate.Broadcast("注册成功，正在发送验证码（Sign up successful, sending code）...", false);
 
-		
-		
+		// 切换到验证码页面
+		// 等待2S，然后切换到验证码页面
+		FTimerDelegate TimerDelegate = FTimerDelegate::CreateLambda([this]()
+		{
+			OnSignUpCompleteDelegate.Broadcast();
+		});
+		if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
+		{
+			LocalPlayerController->GetWorldTimerManager().SetTimer(SwitchToConfirmAccountPageTimerHandle, TimerDelegate, 2.f, false);
+		}
 	}
 }
 
 void UPortalManager::ConfirmAccount_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	if (!bWasSuccessful)
+	{
+		OnConfirmAccountStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+		return;
+	}
+
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+	{
+		if (ContainErrors(JsonObject))
+		{
+			OnConfirmAccountStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+			return;
+		}
+
+		OnConfirmAccountStatusMessageDelegate.Broadcast("账户确认成功（Account confirmed）...", false);
+		
+	}
 }
 
 

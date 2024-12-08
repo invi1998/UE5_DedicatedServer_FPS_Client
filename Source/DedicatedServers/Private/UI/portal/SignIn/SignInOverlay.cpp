@@ -21,12 +21,6 @@ void USignInOverlay::NativeConstruct()
 	checkf(PortalManagerClass, TEXT("PortalManagerClass is nullptr"));
 	PortalManager = NewObject<UPortalManager>(this, PortalManagerClass);
 	
-	Button_SignIn_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
-	Button_SignUp_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignUpPage);
-	Button_ConfirmAccount_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowConfirmAccountPage);
-	Button_SuccessConfirm_Test->OnClicked.AddDynamic(this, &USignInOverlay::ShowSuccessConfirmPage);
-
-
 	SignInPage->Button_SignIn->OnClicked.AddDynamic(this, &USignInOverlay::SignInButtonClicked);
 	SignInPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignUpPage);
 	SignInPage->Button_Exit->OnClicked.AddDynamic(PortalManager, &UPortalManager::QuitGame);

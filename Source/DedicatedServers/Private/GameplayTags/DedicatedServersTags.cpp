@@ -10,5 +10,12 @@ namespace DedicatedServersTags
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(CreatePlayerSession, "DedicatedServersTags.GameSessionsAPI.CreatePlayerSession", "创建玩家会话：为玩家创建一个新的会话，或将玩家添加到现有会话中");
 		
 	}
+
+	namespace PortalAPI
+	{
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(SignIn, "DedicatedServersTags.PortalAPI.SignIn", "登录");
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(SignUp, "DedicatedServersTags.PortalAPI.SignUp", "注册");
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(ConfirmAccount, "DedicatedServersTags.PortalAPI.ConfirmAccount", "确认账户");
+	}
 }
 

@@ -71,6 +71,7 @@ void UPortalManager::SignUp(const FString& Username, const FString& Email, const
 void UPortalManager::ConfirmAccount(const FString& Code, const FString& Username)
 {
 	checkf(APIData, TEXT("APIData is nullptr"));
+	OnConfirmAccountStatusMessageDelegate.Broadcast(TEXT("正在确认账户中（Confirming account）..."), false);
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
 	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::ConfirmAccount);
 	Request->SetURL(API_url);
@@ -93,6 +94,7 @@ void UPortalManager::ConfirmAccount(const FString& Code, const FString& Username
 
 void UPortalManager::ResendCode()
 {
+	
 }
 
 void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)

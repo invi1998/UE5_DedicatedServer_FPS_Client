@@ -63,6 +63,7 @@ void UConfirmAccountPage::Rest()
 	TextBlock_CodeError->SetText(FText::FromString(TEXT("")));
 	Button_ConfirmAccount->SetIsEnabled(false);
 	Button_ResendCode->SetIsEnabled(false);
+	TextBox_Code->SetIsEnabled(true);
 	RestConfirmButtonText();
 	RestResendCodeButtonText();
 }
@@ -73,10 +74,13 @@ void UConfirmAccountPage::UpdateStatusMessage(const FString& StatusMessage, bool
 	{
 		Button_ConfirmAccount->SetIsEnabled(true);
 		TextBlock_CodeError->SetText(FText::FromString(StatusMessage));
+		TextBox_Code->SetIsEnabled(true);
 		RestConfirmButtonText();
 	}
 	else
 	{
+		// 禁用输入框
+		TextBox_Code->SetIsEnabled(false);
 		RestConfirmButtonText(StatusMessage);
 	}
 }
@@ -87,6 +91,7 @@ void UConfirmAccountPage::NativeConstruct()
 
 	Button_ResendCode->SetIsEnabled(false);
 	Button_ConfirmAccount->SetIsEnabled(false);
+	TextBox_Code->SetIsEnabled(true);
 
 	RestConfirmButtonText();
 	RestResendCodeButtonText();

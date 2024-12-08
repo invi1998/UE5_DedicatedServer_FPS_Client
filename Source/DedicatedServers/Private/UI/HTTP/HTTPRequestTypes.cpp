@@ -13,9 +13,10 @@ namespace HTTPStatusMessages
 	const FString PlayerSessionCreateFailed = TEXT("玩家会话创建失败（Player session create failed）");
 	const FString PlayerSessionCreateSuccess = TEXT("玩家会话创建成功，正在进入游戏（Player session create successful, entering game）...");
 
-	const FString SignInUp = TEXT("注册（Sign up）");
+	const FString SignUp = TEXT("注册（Sign up）");
 	const FString ConfirmAccount = TEXT("确认（Confirm account）");
 	const FString SignIn = TEXT("登录（Sign in）");
+	const FString ResendCode = TEXT("重新发送验证码（Resend code）");
 }
 
 void FDSMeataData::Dump() const

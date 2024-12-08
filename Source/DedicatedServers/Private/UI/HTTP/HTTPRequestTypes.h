@@ -15,9 +15,10 @@ namespace HTTPStatusMessages
 	extern DEDICATEDSERVERS_API const FString PlayerSessionCreateSuccess;	// 玩家会话创建成功
 
 	// 部分UI文本
-	extern DEDICATEDSERVERS_API const FString SignInUp;	// 注册
+	extern DEDICATEDSERVERS_API const FString SignUp;	// 注册
 	extern DEDICATEDSERVERS_API const FString ConfirmAccount;	// 确认账户
 	extern DEDICATEDSERVERS_API const FString SignIn;	// 登录
+	extern DEDICATEDSERVERS_API const FString ResendCode;	// 重新发送验证码
 }
 
 USTRUCT()

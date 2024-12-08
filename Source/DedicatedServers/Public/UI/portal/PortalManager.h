@@ -19,6 +19,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FAPIStatusMessage OnSignUpStatusMessageDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FAPIStatusMessage OnSignInStatusMessageDelegate;
+
 	UFUNCTION()
 	void QuitGame();
 	

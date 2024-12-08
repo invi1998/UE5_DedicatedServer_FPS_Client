@@ -45,6 +45,7 @@ public:
 	TObjectPtr<UButton> Button_Exit;	// 退出按钮
 
 protected:
+	void ResetButtonText(const FString& text = "") const;
 	virtual void NativeConstruct() override;
 
 private:

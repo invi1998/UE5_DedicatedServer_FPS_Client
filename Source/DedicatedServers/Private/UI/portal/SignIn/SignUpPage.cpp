@@ -7,21 +7,30 @@
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
+#include "UI/HTTP/HTTPRequestTypes.h"
+
+void USignUpPage::ResetButtonText(const FString& text) const
+{
+	if (Button_SignUp->GetChildrenCount() > 0)
+	{
+		if (UTextBlock* TextBlock = Cast<UTextBlock>(Button_SignUp->GetChildAt(0)))
+		{
+			FString buttonText = text.IsEmpty() ? HTTPStatusMessages::SignUp : text;
+			TextBlock->SetText(FText::FromString(buttonText));
+		}
+	}
+}
 
 void USignUpPage::UpdateStatusMessage(const FString& StatusMessage, bool bNeedRestButton)
 {
 	if (bNeedRestButton)
 	{
 		Button_SignUp->SetIsEnabled(true);
+		ResetButtonText();
 	}
-
-	// 如果按钮有子控件，可以通过以下方式设置按钮的文本
-	if (Button_SignUp->GetChildrenCount() > 0)
+	else
 	{
-		if (UTextBlock* TextBlock = Cast<UTextBlock>(Button_SignUp->GetChildAt(0)))
-		{
-			TextBlock->SetText(FText::FromString(StatusMessage));
-		}
+		ResetButtonText(StatusMessage);
 	}
 }
 
@@ -41,6 +50,8 @@ void USignUpPage::NativeConstruct()
 	TextBox_ConfirmPassword->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_ConfirmPassword_OnTextChanged);
 
 	Button_SignUp->SetIsEnabled(false);
+
+	ResetButtonText();
 }
 
 void USignUpPage::ShowPassword(bool bIsChecked)

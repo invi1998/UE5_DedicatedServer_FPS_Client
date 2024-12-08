@@ -37,5 +37,15 @@ public:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_Back;
+
+	UFUNCTION()
+	void TextBox_Code_OnTextChanged(const FText& Text);
+
+	void RestConfirmButtonText(const FString& text = "") const;
+
+	void RestResendCodeButtonText(const FString& text = "") const;
+
+private:
+	virtual void NativeConstruct() override;
 	
 };

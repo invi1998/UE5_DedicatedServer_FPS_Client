@@ -60,6 +60,8 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_SignIn;	// 登录按钮
 
+	void ResetButtonText(const FString& text = "") const;
+	
 	UFUNCTION()
 	void UpdateStatusMessage(const FString& StatusMessage, bool bNeedRestButton);
 

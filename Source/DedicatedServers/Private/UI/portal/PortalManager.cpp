@@ -3,6 +3,8 @@
 
 #include "UI/portal/PortalManager.h"
 
+#include "HttpModule.h"
+#include "Data/API/APIData.h"
 #include "Kismet/GameplayStatics.h"
 
 void UPortalManager::QuitGame()
@@ -15,17 +17,88 @@ void UPortalManager::QuitGame()
 
 void UPortalManager::SignIn(const FString& Username, const FString& Password)
 {
+	checkf(APIData, TEXT("APIData is nullptr"));
+	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignIn);
+	Request->SetURL(API_url);
+	Request->SetVerb(TEXT("GET"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	// 填充API请求参数
+	const TMap<FString, FString> Params = {
+		{TEXT("username"), Username},
+		{TEXT("password"), Password}
+	};
+
+	const FString ContentString = SerializeJsonContent(Params);
+	Request->SetContentAsString(ContentString);
+
+	Request->OnProcessRequestComplete().BindUObject(this, &UPortalManager::SignIn_Response);
+
+	Request->ProcessRequest();
 }
 
 void UPortalManager::SignUp(const FString& Username, const FString& Email, const FString& FullName, const FString& Password)
 {
+	checkf(APIData, TEXT("APIData is nullptr"));
+	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignUp);
+	Request->SetURL(API_url);
+	Request->SetVerb(TEXT("POST"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	// 填充API请求参数
+	const TMap<FString, FString> Params = {
+		{TEXT("username"), Username},
+		{TEXT("email"), Email},
+		{TEXT("name"), FullName},
+		{TEXT("password"), Password}
+	};
+
+	const FString ContentString = SerializeJsonContent(Params);
+	Request->SetContentAsString(ContentString);
+
+	Request->OnProcessRequestComplete().BindUObject(this, &UPortalManager::SignUp_Response);
+
+	Request->ProcessRequest();
 }
 
-void UPortalManager::ConfirmAccount(const FString& Code)
+void UPortalManager::ConfirmAccount(const FString& Code, const FString& Username)
 {
+	checkf(APIData, TEXT("APIData is nullptr"));
+	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::ConfirmAccount);
+	Request->SetURL(API_url);
+	Request->SetVerb(TEXT("PUT"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	// 填充API请求参数
+	const TMap<FString, FString> Params = {
+		{TEXT("username"), Username},
+		{TEXT("code"), Code}
+	};
+
+	const FString ContentString = SerializeJsonContent(Params);
+	Request->SetContentAsString(ContentString);
+
+	Request->OnProcessRequestComplete().BindUObject(this, &UPortalManager::ConfirmAccount_Response);
+
+	Request->ProcessRequest();
 }
 
 void UPortalManager::ResendCode()
+{
+}
+
+void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+}
+
+void UPortalManager::SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+}
+
+void UPortalManager::ConfirmAccount_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 }
 

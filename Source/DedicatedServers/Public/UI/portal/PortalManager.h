@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interfaces/IHttpRequest.h"
 #include "UI/HTTP/HTTPRequestManager.h"
 #include "PortalManager.generated.h"
 
@@ -21,7 +22,15 @@ public:
 	
 	void SignIn(const FString& Username, const FString& Password);
 	void SignUp(const FString& Username, const FString& Email, const FString& FullName, const FString& Password);
-	void ConfirmAccount(const FString& Code);
+	void ConfirmAccount(const FString& Code, const FString& Username);
 	void ResendCode();
+
+
+private:
+	void SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	
+	void SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+	void ConfirmAccount_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	
 };

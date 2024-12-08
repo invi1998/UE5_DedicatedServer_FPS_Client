@@ -23,8 +23,6 @@ class DEDICATEDSERVERS_API USignInOverlay : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UJoinGame> JoinGameWidget;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UPortalManager> PortalManagerClass;
@@ -60,18 +58,9 @@ private:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_SuccessConfirm_Test;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> Button_JoinGame_Test;
 	
 	UPROPERTY()
 	TObjectPtr<UPortalManager> PortalManager;
-
-	UFUNCTION()
-	void OnJoinGameButtonClicked();
-
-	UFUNCTION()
-	void UpdateJoinGameStatusMessage(const FString& Message, bool bNeedRestJoinGameButton);
 
 	UFUNCTION()
 	void ShowSignInPage();
@@ -84,9 +73,6 @@ private:
 
 	UFUNCTION()
 	void ShowSuccessConfirmPage();
-
-	UFUNCTION()
-	void ShowJoinGamePage();
 
 	UFUNCTION()
 	void SignInButtonClicked();

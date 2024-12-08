@@ -24,6 +24,8 @@ void USignInOverlay::NativeConstruct()
 	SignInPage->Button_SignIn->OnClicked.AddDynamic(this, &USignInOverlay::SignInButtonClicked);
 	SignInPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignUpPage);
 	SignInPage->Button_Exit->OnClicked.AddDynamic(PortalManager, &UPortalManager::QuitGame);
+	PortalManager->OnSignInStatusMessageDelegate.AddDynamic(SignInPage, &USignInPage::UpdateStatusMessage);
+	PortalManager->OnSignInCompleteDelegate.AddDynamic(this, &USignInOverlay::OnSignInSuccessed);
 	
 	SignUpPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::SignUpButtonClicked);
 	SignUpPage->Button_SignIn->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
@@ -158,4 +160,10 @@ void USignInOverlay::OnSignUpSuccessed()
 void USignInOverlay::OnConfirmAccountSuccessed()
 {
 	ShowSuccessConfirmPage();
+}
+
+void USignInOverlay::OnSignInSuccessed()
+{
+	// 进入游戏
+
 }

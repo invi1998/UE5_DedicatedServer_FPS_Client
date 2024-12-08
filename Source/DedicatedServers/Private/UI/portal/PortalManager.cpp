@@ -20,10 +20,11 @@ void UPortalManager::QuitGame()
 void UPortalManager::SignIn(const FString& Username, const FString& Password)
 {
 	checkf(APIData, TEXT("APIData is nullptr"));
+	OnSignInStatusMessageDelegate.Broadcast(TEXT("账号登录中（Signing in）..."), false);
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
 	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignIn);
 	Request->SetURL(API_url);
-	Request->SetVerb(TEXT("GET"));
+	Request->SetVerb(TEXT("POST"));
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
 	// 填充API请求参数
@@ -100,6 +101,29 @@ void UPortalManager::ResendCode()
 
 void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	if (!bWasSuccessful)
+	{
+		OnSignInStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+		return;
+	}
+
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+	{
+		if (ContainErrors(JsonObject))
+		{
+			OnSignInStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
+			return;
+		}
+
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &LastSignInResponse);
+
+		LastSignInResponse.Dump();
+		
+		OnSignInCompleteDelegate.Broadcast();
+	}
 }
 
 void UPortalManager::SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
@@ -146,7 +170,7 @@ void UPortalManager::ConfirmAccount_Response(FHttpRequestPtr Request, FHttpRespo
 		{
 			if (JsonObject->HasField(TEXT("name")) && JsonObject->GetStringField(TEXT("name")).Equals(TEXT("CodeMismatchException")))
 			{
-				const FString ErrorMessage{"验证码错误，请重新输入（Code mismatch, please try again）"};
+				const FString ErrorMessage = TEXT("验证码错误，请重新输入（Code mismatch, please try again）");
 				OnConfirmAccountStatusMessageDelegate.Broadcast(ErrorMessage, true);
 				return;
 			}

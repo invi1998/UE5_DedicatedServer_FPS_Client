@@ -44,6 +44,9 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Button_Exit;	// 退出按钮
 
+	UFUNCTION()
+	void UpdateStatusMessage(const FString& StatusMessage, bool bNeedRestButton);
+
 protected:
 	void ResetButtonText(const FString& text = "") const;
 	virtual void NativeConstruct() override;
@@ -52,4 +55,14 @@ private:
 
 	UFUNCTION()
 	void ShowPassword(bool bIsChecked);
+
+	UFUNCTION()
+	void TextBox_Username_OnTextChanged(const FText& Text);
+
+	UFUNCTION()
+	void TextBox_Password_OnTextChanged(const FText& Text);
+
+	bool bTextBlock_UsernameIsValidate = false;
+	bool bTextBlock_PasswordIsValidate = false;
 };
+

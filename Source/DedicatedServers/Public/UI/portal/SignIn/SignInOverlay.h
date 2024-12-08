@@ -83,6 +83,9 @@ private:
 	UFUNCTION()
 	void OnConfirmAccountSuccessed();
 
+	UFUNCTION()
+	void OnSignInSuccessed();
+
 	FTimerHandle ResendCodeTimerHandle;
 	int32 ResendCodeCountdown{60};
 	

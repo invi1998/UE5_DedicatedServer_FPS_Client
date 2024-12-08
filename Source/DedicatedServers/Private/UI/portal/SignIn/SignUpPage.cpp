@@ -30,6 +30,7 @@ void USignUpPage::UpdateStatusMessage(const FString& StatusMessage, bool bNeedRe
 	}
 	else
 	{
+		Button_SignUp->SetIsEnabled(false);
 		ResetButtonText(StatusMessage);
 	}
 }

@@ -6,7 +6,7 @@
 #include "Components/Button.h"
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
-#include "UI/HTTP/HTTPRequestTypes.h"
+#include "HTTP/HTTPRequestTypes.h"
 
 void UConfirmAccountPage::TextBox_Code_OnTextChanged(const FText& Text)
 {

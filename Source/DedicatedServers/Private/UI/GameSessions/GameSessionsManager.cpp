@@ -9,7 +9,7 @@
 #include "GameFramework/PlayerState.h"
 #include "Interfaces/IHttpResponse.h"
 #include "Kismet/GameplayStatics.h"
-#include "UI/HTTP/HTTPRequestTypes.h"
+#include "HTTP/HTTPRequestTypes.h"
 
 void UGameSessionsManager::JoinGameSession(bool bRetry)
 {

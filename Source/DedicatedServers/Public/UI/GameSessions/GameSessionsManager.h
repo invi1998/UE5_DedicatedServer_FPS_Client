@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/IHttpRequest.h"
-#include "UI/HTTP/HTTPRequestManager.h"
+#include "HTTP/HTTPRequestManager.h"
 #include "GameSessionsManager.generated.h"
 
 /**

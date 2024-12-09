@@ -1,7 +1,7 @@
 ﻿// // Copyright invi1998
 
 
-#include "UI/HTTP/HTTPRequestManager.h"
+#include "HTTP/HTTPRequestManager.h"
 
 #include "HTTPRequestTypes.h"
 #include "JsonObjectConverter.h"

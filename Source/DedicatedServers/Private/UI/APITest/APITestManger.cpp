@@ -8,7 +8,7 @@
 #include "Data/API/APIData.h"
 #include "DedicatedServers/DedicatedServers.h"
 #include "Interfaces/IHttpResponse.h"
-#include "UI/HTTP/HTTPRequestTypes.h"
+#include "HTTP/HTTPRequestTypes.h"
 
 void UAPITestManger::ListFleets()
 {

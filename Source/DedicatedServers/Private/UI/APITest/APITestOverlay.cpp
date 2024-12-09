@@ -8,7 +8,7 @@
 #include "UI/API/ListFleets/FleetID.h"
 #include "UI/API/ListFleets/ListFleetsBox.h"
 #include "UI/APITest/APITestManger.h"
-#include "UI/HTTP/HTTPRequestTypes.h"
+#include "HTTP/HTTPRequestTypes.h"
 
 void UAPITestOverlay::NativeConstruct()
 {

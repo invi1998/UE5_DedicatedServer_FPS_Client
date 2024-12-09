@@ -8,6 +8,7 @@
 #include "Data/API/APIData.h"
 #include "Interfaces/IHttpResponse.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/DSLocalPlayerSubsystem.h"
 
 void UPortalManager::QuitGame()
 {
@@ -118,9 +119,14 @@ void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 			return;
 		}
 
+		FDSInitiateAuthResponse LastSignInResponse{};
 		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &LastSignInResponse);
 
-		LastSignInResponse.Dump();
+		UDSLocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem();
+		if (IsValid(LocalPlayerSubsystem))
+		{
+			LocalPlayerSubsystem->InitializeToken(LastSignInResponse.AuthenticationResult, this);
+		}
 		
 		OnSignInCompleteDelegate.Broadcast();
 	}

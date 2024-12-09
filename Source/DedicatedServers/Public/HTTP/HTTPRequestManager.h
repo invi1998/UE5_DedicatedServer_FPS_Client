@@ -6,6 +6,7 @@
 #include "UObject/Object.h"
 #include "HTTPRequestManager.generated.h"
 
+class UDSLocalPlayerSubsystem;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAPIStatusMessage, const FString&, StatusMessage, bool, bNeedRestButton);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAPIRequestComplete);
 
@@ -20,6 +21,9 @@ class DEDICATEDSERVERS_API UHTTPRequestManager : public UObject
 	GENERATED_BODY()
 
 public:
+	UDSLocalPlayerSubsystem* GetDSLocalPlayerSubsystem() const;
+	
+protected:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAPIData> APIData;
 
@@ -28,5 +32,5 @@ public:
 	static void DumpMetaData(TSharedPtr<FJsonObject> JsonObject);
 
 	static FString SerializeJsonContent(const TMap<FString, FString>& Params);
-
+	
 };

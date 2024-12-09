@@ -18,15 +18,23 @@ class DEDICATEDSERVERS_API UDSLocalPlayerSubsystem : public ULocalPlayerSubsyste
 
 public:
 	void InitializeToken(const FDSAuthenticationResult& InAuthenticationResult, UPortalManager* InPortalManager);
-	const FDSAuthenticationResult& GetAuthenticationResult() const { return AuthenticationResult; }
 
+	
+	void SetRefreshTokenTimer();
+
+	void UpdateToken(const FString& AccessToken, const FString& IdToken);
+	
 private:
+	void RefreshToken();
+	
 	UPROPERTY()
 	FDSAuthenticationResult AuthenticationResult;
-
-	FTimerHandle RefrushTokenTimerHandle;
-
+	
 	UPROPERTY()
 	TObjectPtr<UPortalManager> PortalManager;
+
+	FTimerHandle RefreshTokenTimerHandle;
+	
+	float TokenRefreshInterval = 2700.0f;		// 令牌刷新间隔，单位秒，45分钟（AWS Cognito令牌有效期为1小时）
 	
 };

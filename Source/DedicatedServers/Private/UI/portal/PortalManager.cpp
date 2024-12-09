@@ -100,6 +100,28 @@ void UPortalManager::ResendCode()
 	
 }
 
+void UPortalManager::RefreshToken(const FString& RefreshToken)
+{
+	checkf(APIData, TEXT("APIData is nullptr"));
+	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignIn);
+	Request->SetURL(API_url);
+	Request->SetVerb(TEXT("POST"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	// 填充API请求参数
+	const TMap<FString, FString> Params = {
+		{TEXT("refreshToken"), RefreshToken}
+	};
+
+	const FString ContentString = SerializeJsonContent(Params);
+	Request->SetContentAsString(ContentString);
+
+	Request->OnProcessRequestComplete().BindUObject(this, &UPortalManager::ResendCode_Response);
+
+	Request->ProcessRequest();
+}
+
 void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	if (!bWasSuccessful)
@@ -201,6 +223,28 @@ void UPortalManager::ConfirmAccount_Response(FHttpRequestPtr Request, FHttpRespo
 
 		OnConfirmAccountStatusMessageDelegate.Broadcast("账户确认成功（Account confirmed）...", false);
 		OnConfirmAccountCompleteDelegate.Broadcast();
+	}
+}
+
+void UPortalManager::ResendCode_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	if (!bWasSuccessful) return;
+
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+	{
+		if (ContainErrors(JsonObject)) return;
+
+		FDSInitiateAuthResponse LastSignInResponse{};
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &LastSignInResponse);
+
+		UDSLocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem();
+		if (IsValid(LocalPlayerSubsystem))
+		{
+			LocalPlayerSubsystem->UpdateToken(LastSignInResponse.AuthenticationResult.AccessToken, LastSignInResponse.AuthenticationResult.IdToken);
+		}
 	}
 }
 

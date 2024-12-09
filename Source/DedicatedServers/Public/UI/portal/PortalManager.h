@@ -50,12 +50,17 @@ public:
 	FString LastSignUpUsername{};
 	FString LastSignUpPassword{};
 
+	// 刷新令牌
+	void RefreshToken(const FString &RefreshToken);
+
 private:
 	void SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	
 	void SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	void ConfirmAccount_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+	void ResendCode_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	FTimerHandle SwitchToConfirmAccountPageTimerHandle;
 	

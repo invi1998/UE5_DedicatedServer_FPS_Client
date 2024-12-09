@@ -22,7 +22,7 @@ class DEDICATEDSERVERS_API UDashboardOverlay : public UUserWidget
 
 public:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UWidgetSwitcher> WidgetSwitcher;
+	TObjectPtr<UWidgetSwitcher> WidgetSwitcher;		// 小部件切换器
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UGamePage> GamePage;

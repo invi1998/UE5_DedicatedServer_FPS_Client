@@ -141,6 +141,18 @@ void UPortalManager::SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 	{
 		if (ContainErrors(JsonObject))
 		{
+			if (JsonObject->HasField(TEXT("errorType")) && JsonObject->GetStringField(TEXT("errorType")).Equals(TEXT("UsernameExistsException")))
+			{
+				const FString ErrorMessage = TEXT("用户名已存在，请更换用户名（Username already exists, please change username）");
+				OnSignUpStatusMessageDelegate.Broadcast(ErrorMessage, true);
+				return;
+			}
+			if (JsonObject->HasField(TEXT("errorType")) && JsonObject->GetStringField(TEXT("errorType")).Equals(TEXT("UserLambdaValidationException")))
+			{
+				const FString ErrorMessage = TEXT("该邮箱已被注册，请更换邮箱（Email already exists, please change email）");
+				OnSignUpStatusMessageDelegate.Broadcast(ErrorMessage, true);
+				return;
+			}
 			OnSignUpStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
 			return;
 		}

@@ -7,7 +7,7 @@
 #include "HTTP/HTTPRequestTypes.h"
 #include "DSLocalPlayerSubsystem.generated.h"
 
-class UPortalManager;
+class IPortalManagement;
 /**
  * 本地玩家子系统，用于实现玩家数据的存储和管理
  */
@@ -17,8 +17,7 @@ class DEDICATEDSERVERS_API UDSLocalPlayerSubsystem : public ULocalPlayerSubsyste
 	GENERATED_BODY()
 
 public:
-	void InitializeToken(const FDSAuthenticationResult& InAuthenticationResult, UPortalManager* InPortalManager);
-
+	void InitializeToken(const FDSAuthenticationResult& InAuthenticationResult, TScriptInterface<IPortalManagement> InPortalManager);
 	
 	void SetRefreshTokenTimer();
 
@@ -31,7 +30,7 @@ private:
 	FDSAuthenticationResult AuthenticationResult;
 	
 	UPROPERTY()
-	TObjectPtr<UPortalManager> PortalManager;
+	TScriptInterface<IPortalManagement> PortalManagementInterface;
 
 	FTimerHandle RefreshTokenTimerHandle;
 	

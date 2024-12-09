@@ -2,29 +2,28 @@
 
 
 #include "Player/DSLocalPlayerSubsystem.h"
+#include "UI/portal/Interfaces/PortalManagement.h"
 
-#include "UI/portal/PortalManager.h"
+void UDSLocalPlayerSubsystem::RefreshToken()
+{
+	if (PortalManagementInterface)
+	{
+		PortalManagementInterface->RefreshToken(AuthenticationResult.RefreshToken);
+	}
+}
 
-
-void UDSLocalPlayerSubsystem::InitializeToken(const FDSAuthenticationResult& InAuthenticationResult, UPortalManager* InPortalManager)
+void UDSLocalPlayerSubsystem::InitializeToken(const FDSAuthenticationResult& InAuthenticationResult, TScriptInterface<IPortalManagement> InPortalManager)
 {
 	AuthenticationResult = InAuthenticationResult;
-	PortalManager = InPortalManager;
+	PortalManagementInterface = InPortalManager;
 
 	SetRefreshTokenTimer();
 }
 
-void UDSLocalPlayerSubsystem::RefreshToken()
-{
-	if (PortalManager)
-	{
-		PortalManager->RefreshToken(AuthenticationResult.RefreshToken);
-	}
-}
-
 void UDSLocalPlayerSubsystem::SetRefreshTokenTimer()
 {
-	if (UWorld* World = GetWorld())
+	UWorld* World = GetWorld();
+	if (IsValid(World) && IsValid(PortalManagementInterface.GetObject()))
 	{
 		FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &UDSLocalPlayerSubsystem::RefreshToken);
 		World->GetTimerManager().SetTimer(RefreshTokenTimerHandle, TimerDelegate, TokenRefreshInterval, false);

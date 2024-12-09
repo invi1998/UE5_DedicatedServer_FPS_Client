@@ -6,13 +6,14 @@
 #include "Interfaces/IHttpRequest.h"
 #include "HTTP/HTTPRequestManager.h"
 #include "HTTP/HTTPRequestTypes.h"
+#include "Interfaces/PortalManagement.h"
 #include "PortalManager.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEDICATEDSERVERS_API UPortalManager : public UHTTPRequestManager
+class DEDICATEDSERVERS_API UPortalManager : public UHTTPRequestManager, public IPortalManagement
 {
 	GENERATED_BODY()
 
@@ -50,8 +51,9 @@ public:
 	FString LastSignUpUsername{};
 	FString LastSignUpPassword{};
 
+	// IPortalManagement interface
 	// 刷新令牌
-	void RefreshToken(const FString &RefreshToken);
+	virtual void RefreshToken(const FString &RefreshToken) override;
 
 private:
 	void SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);

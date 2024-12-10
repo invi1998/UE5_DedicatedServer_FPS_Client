@@ -9,6 +9,7 @@
 #include "Interfaces/IHttpResponse.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/DSLocalPlayerSubsystem.h"
+#include "UI/portal/PortalHUD.h"
 
 void UPortalManager::QuitGame()
 {
@@ -150,7 +151,15 @@ void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 			LocalPlayerSubsystem->InitializeToken(LastSignInResponse.AuthenticationResult, this);
 		}
 		
-		OnSignInCompleteDelegate.Broadcast();
+		APlayerController* OwnerPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld());
+		if (IsValid(OwnerPlayerController))
+		{
+			APortalHUD* PortalHUD = Cast<APortalHUD>(OwnerPlayerController->GetHUD());
+			if (IsValid(PortalHUD))
+			{
+				PortalHUD->OnSignIn();
+			}
+		}
 	}
 }
 

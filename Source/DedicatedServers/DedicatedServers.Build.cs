@@ -17,7 +17,8 @@ public class DedicatedServers : ModuleRules
 			"GameplayTags",
 			"HTTP",
 			"Json",
-			"JsonUtilities"
+			"JsonUtilities",
+			"CommonUI"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

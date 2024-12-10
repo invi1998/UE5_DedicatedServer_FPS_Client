@@ -11,7 +11,7 @@ class ULeaderboard;
 class UCareerPage;
 class UGamePage;
 class UWidgetSwitcher;
-class UButton;
+class UCommonButtonBase;
 /**
  * 
  */
@@ -36,16 +36,37 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USettingPage> SettingPage;
 
-	// 按钮
+	// UE5通用按钮基类：CommonButtonBase
+	
+	// BlueprintProtected = true 表示这个变量只能在蓝图中访问
+	// AllowPrivateAccess = true 表示这个变量只能在这个类中访问
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
-	TObjectPtr<UUserWidget> GameButton;
+	TObjectPtr<UCommonButtonBase> Button_Game;
 
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
-	TObjectPtr<UUserWidget> CareerButton;
+	TObjectPtr<UCommonButtonBase> Button_Career;
 
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
-	TObjectPtr<UUserWidget> LeaderboardButton;
+	TObjectPtr<UCommonButtonBase> Button_Leaderboard;
 
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
-	TObjectPtr<UUserWidget> SettingButton;
+	TObjectPtr<UCommonButtonBase> Button_Setting;
+
+	UFUNCTION()
+	void ShowGamePage();
+
+	UFUNCTION()
+	void ShowCareerPage();
+
+	UFUNCTION()
+	void ShowLeaderboard();
+
+	UFUNCTION()
+	void ShowSettingPage();
+
+protected:
+	 virtual void NativeConstruct() override;
+
+private:
+
 };

@@ -15,7 +15,7 @@ class UButton;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class DEDICATEDSERVERS_API UDashboardOverlay : public UUserWidget
 {
 	GENERATED_BODY()
@@ -37,15 +37,15 @@ public:
 	TObjectPtr<USettingPage> SettingPage;
 
 	// 按钮
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> GameButton;
+	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	TObjectPtr<UUserWidget> GameButton;
 
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> CareerButton;
+	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	TObjectPtr<UUserWidget> CareerButton;
 
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> LeaderboardButton;
+	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	TObjectPtr<UUserWidget> LeaderboardButton;
 
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> SettingButton;
+	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
+	TObjectPtr<UUserWidget> SettingButton;
 };

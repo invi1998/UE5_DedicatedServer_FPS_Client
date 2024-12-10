@@ -3,6 +3,7 @@
 
 #include "UI/portal/PortalHUD.h"
 #include "UI/portal/SignIn/SignInOverlay.h"
+#include "UI/portal/Dashboard/DashboardOverlay.h"
 
 #include "Blueprint/UserWidget.h"
 
@@ -11,11 +12,19 @@ void APortalHUD::BeginPlay()
 	Super::BeginPlay();
 
 	APlayerController* OwnerPlayerController = GetOwningPlayerController();
-	SignInOverlay = CreateWidget<USignInOverlay>(OwnerPlayerController, SignOverlayClass);
+	// SignInOverlay = CreateWidget<USignInOverlay>(OwnerPlayerController, SignOverlayClass);
+	//
+	// // rider 注释代码的快捷键是Ctrl+K+C，取消注释的快捷键是Ctrl+K+U
+	// if (IsValid(SignInOverlay))
+	// {
+	// 	SignInOverlay->AddToViewport();
+	// }
 
-	if (IsValid(SignInOverlay))
+	DashboardOverlay = CreateWidget<UDashboardOverlay>(OwnerPlayerController, DashboardOverlayClass);
+
+	if (IsValid(DashboardOverlay))
 	{
-		SignInOverlay->AddToViewport();
+		DashboardOverlay->AddToViewport();
 	}
 
 	FInputModeGameAndUI InputMode;

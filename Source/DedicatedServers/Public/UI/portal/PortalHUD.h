@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "PortalHUD.generated.h"
 
+class UDashboardOverlay;
 class USignInOverlay;
 /**
  * 门户HUD
@@ -19,10 +20,16 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USignInOverlay> SignOverlayClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDashboardOverlay> DashboardOverlayClass;
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY()
 	TObjectPtr<USignInOverlay> SignInOverlay;
+
+	UPROPERTY()
+	TObjectPtr<UDashboardOverlay> DashboardOverlay;
 };

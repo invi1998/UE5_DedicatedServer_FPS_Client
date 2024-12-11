@@ -16,6 +16,7 @@ namespace DedicatedServersTags
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(SignIn, "DedicatedServersTags.PortalAPI.SignIn", "登录");
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(SignUp, "DedicatedServersTags.PortalAPI.SignUp", "注册");
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(ConfirmAccount, "DedicatedServersTags.PortalAPI.ConfirmAccount", "确认账户");
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(SignOut, "DedicatedServersTags.PortalAPI.SignOut", "登出");
 	}
 }
 

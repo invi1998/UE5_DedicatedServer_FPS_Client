@@ -38,6 +38,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FAPIRequestComplete OnSuccessConfirmCompleteDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FAPIRequestComplete OnSignOutCompleteDelegate;
 	
 	UFUNCTION()
 	void QuitGame();

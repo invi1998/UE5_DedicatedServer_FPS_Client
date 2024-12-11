@@ -281,6 +281,7 @@ void UPortalManager::ResendCode_Response(FHttpRequestPtr Request, FHttpResponseP
 
 void UPortalManager::SignOut_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	OnSignOutCompleteDelegate.Broadcast();
 	if (!bWasSuccessful) return;
 
 	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());

@@ -22,6 +22,8 @@ public:
 	void SetRefreshTokenTimer();
 
 	void UpdateToken(const FString& AccessToken, const FString& IdToken);
+
+	FDSAuthenticationResult GetAuthenticationResult() const;
 	
 private:
 	void RefreshToken();

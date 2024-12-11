@@ -178,10 +178,10 @@ void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 		APlayerController* OwnerPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld());
 		if (IsValid(OwnerPlayerController))
 		{
-			APortalHUD* PortalHUD = Cast<APortalHUD>(OwnerPlayerController->GetHUD());
-			if (IsValid(PortalHUD))
+			// 查看HUD是否实现了IPortalHUD接口
+			if (IHUDManagement* HUDManagement = Cast<IHUDManagement>(OwnerPlayerController->GetHUD()))
 			{
-				PortalHUD->OnSignIn();
+				HUDManagement->OnSignIn();
 			}
 		}
 	}
@@ -293,12 +293,16 @@ void UPortalManager::SignOut_Response(FHttpRequestPtr Request, FHttpResponsePtr 
 	{
 		if (ContainErrors(JsonObject)) return;
 
-		UDSLocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem();
-		if (IsValid(LocalPlayerSubsystem))
+		APlayerController* OwnerPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld());
+		if (IsValid(OwnerPlayerController))
 		{
-			// LocalPlayerSubsystem->ClearToken();
+			if (IHUDManagement* HUDManagement = Cast<IHUDManagement>(OwnerPlayerController->GetHUD()))
+			{
+				HUDManagement->OnSignOut();
+			}
 		}
 	}
+		
 }
 
 

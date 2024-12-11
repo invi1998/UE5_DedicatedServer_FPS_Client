@@ -18,8 +18,6 @@ class DEDICATEDSERVERS_API UGameLoading : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonButtonBase> Button_Loading;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UInfoText> InfoTextClass;

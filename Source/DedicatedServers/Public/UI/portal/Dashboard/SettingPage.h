@@ -8,6 +8,7 @@
 
 class UPortalManager;
 class UCommonButtonBase;
+class UTextBlock;
 /**
  * 
  */
@@ -23,6 +24,12 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> Button_SignOut;
 
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UTextBlock> TextBlock_Username;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UTextBlock> TextBlock_Email;
+
 protected:
 	virtual void NativeConstruct() override;
 	
@@ -34,4 +41,7 @@ private:
 
 	UFUNCTION()
 	void OnSignOutComplete();
+
+	// Email 加密显示（只显示前2位和@符号和@符号后一位），其余用*代替
+	FString EncryptEmail(const FString& Email) const;
 };

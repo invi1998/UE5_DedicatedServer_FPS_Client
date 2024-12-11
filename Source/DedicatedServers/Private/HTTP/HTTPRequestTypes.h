@@ -344,6 +344,20 @@ struct FDSAuthenticationResult
 };
 
 USTRUCT()
+struct FDSUser
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString Username{};	// 用户名
+
+	UPROPERTY()
+	FString Email{};	// 电子邮件
+
+	void Dump() const;
+};
+
+USTRUCT()
 struct FDSInitiateAuthResponse
 {
 	GENERATED_BODY()
@@ -363,5 +377,10 @@ struct FDSInitiateAuthResponse
 	UPROPERTY()
 	FString Session{};							// 会话
 
+	UPROPERTY()
+	FDSUser User;								// 用户
+
 	void Dump() const;
 };
+
+

@@ -130,6 +130,14 @@ void FDSAuthenticationResult::Dump() const
 	NewDeviceMetadata.Dump();
 }
 
+void FDSUser::Dump() const
+{
+	UE_LOG(LogDedicatedServers, Log, TEXT("User:"));
+	UE_LOG(LogDedicatedServers, Log, TEXT("	Username: %s"), *Username);
+	UE_LOG(LogDedicatedServers, Log, TEXT("	Email: %s"), *Email);
+	
+}
+
 void FDSInitiateAuthResponse::Dump() const
 {
 	UE_LOG(LogDedicatedServers, Log, TEXT("InitiateAuthResponse(SignIn):"));
@@ -146,4 +154,7 @@ void FDSInitiateAuthResponse::Dump() const
 		UE_LOG(LogDedicatedServers, Log, TEXT("	  %s: %s"), *Parameter.Key, *Parameter.Value);
 	}
 	UE_LOG(LogDedicatedServers, Log, TEXT("	Session: %s"), *Session);
+	User.Dump();
 }
+
+

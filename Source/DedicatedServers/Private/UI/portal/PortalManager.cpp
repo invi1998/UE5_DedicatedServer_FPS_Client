@@ -171,6 +171,8 @@ void UPortalManager::SignIn_Response(FHttpRequestPtr Request, FHttpResponsePtr R
 		if (IsValid(LocalPlayerSubsystem))
 		{
 			LocalPlayerSubsystem->InitializeToken(LastSignInResponse.AuthenticationResult, this);
+			LocalPlayerSubsystem->UserName = LastSignInResponse.User.Username;
+			LocalPlayerSubsystem->Email = LastSignInResponse.User.Email;
 		}
 		
 		APlayerController* OwnerPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld());

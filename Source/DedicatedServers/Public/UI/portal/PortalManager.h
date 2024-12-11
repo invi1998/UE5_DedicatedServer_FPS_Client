@@ -46,6 +46,7 @@ public:
 	void SignUp(const FString& Username, const FString& Email, const FString& FullName, const FString& Password);
 	void ConfirmAccount(const FString& Code, const FString& Username);
 	void ResendCode();
+	void SignOut(const FString& AccessToken);
 
 	FDSSignUpResponse LastSignUpResponse{};
 	FString LastSignUpUsername{};
@@ -63,6 +64,8 @@ private:
 	void ConfirmAccount_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	void ResendCode_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+	void SignOut_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	FTimerHandle SwitchToConfirmAccountPageTimerHandle;
 	

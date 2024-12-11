@@ -101,6 +101,28 @@ void UPortalManager::ResendCode()
 	
 }
 
+void UPortalManager::SignOut(const FString& AccessToken)
+{
+	checkf(APIData, TEXT("APIData is nullptr"));
+	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::PortalAPI::SignOut);
+	Request->SetURL(API_url);
+	Request->SetVerb(TEXT("POST"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	// 填充API请求参数
+	const TMap<FString, FString> Params = {
+		{TEXT("accessToken"), AccessToken}
+	};
+
+	const FString ContentString = SerializeJsonContent(Params);
+	Request->SetContentAsString(ContentString);
+
+	Request->OnProcessRequestComplete().BindUObject(this, &UPortalManager::SignOut_Response);
+
+	Request->ProcessRequest();
+}
+
 void UPortalManager::RefreshToken(const FString& RefreshToken)
 {
 	checkf(APIData, TEXT("APIData is nullptr"));
@@ -253,6 +275,25 @@ void UPortalManager::ResendCode_Response(FHttpRequestPtr Request, FHttpResponseP
 		if (IsValid(LocalPlayerSubsystem))
 		{
 			LocalPlayerSubsystem->UpdateToken(LastSignInResponse.AuthenticationResult.AccessToken, LastSignInResponse.AuthenticationResult.IdToken);
+		}
+	}
+}
+
+void UPortalManager::SignOut_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	if (!bWasSuccessful) return;
+
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+	{
+		if (ContainErrors(JsonObject)) return;
+
+		UDSLocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem();
+		if (IsValid(LocalPlayerSubsystem))
+		{
+			// LocalPlayerSubsystem->ClearToken();
 		}
 	}
 }

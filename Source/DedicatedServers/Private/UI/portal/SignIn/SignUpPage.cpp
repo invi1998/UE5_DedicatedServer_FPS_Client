@@ -49,7 +49,7 @@ void USignUpPage::NativeConstruct()
 	TextBox_FullName->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_FullName_OnTextChanged);
 	TextBox_Password->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_Password_OnTextChanged);
 	TextBox_ConfirmPassword->OnTextChanged.AddDynamic(this, &USignUpPage::TextBox_ConfirmPassword_OnTextChanged);
-
+	
 	Button_SignUp->SetIsEnabled(false);
 
 	ResetButtonText();

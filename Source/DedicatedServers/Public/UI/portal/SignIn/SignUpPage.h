@@ -72,7 +72,7 @@ private:
 
 	UFUNCTION()
 	void ShowPassword(bool bIsChecked);
-
+	
 	UFUNCTION()
 	void TextBox_Username_OnTextChanged(const FText& Text);
 

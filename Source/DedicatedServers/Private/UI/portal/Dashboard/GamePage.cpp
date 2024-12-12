@@ -30,6 +30,11 @@ void UGamePage::JoinGameButtonClicked()
 	{
 		GameLoading->AddToViewport();
 	}
+
+	if (IsValid(GameSessionsManager))
+	{
+		GameSessionsManager->JoinGameSession();
+	}
 }
 
 void UGamePage::SetStatusMessage(const FString& StatusMessage, bool bNeedRestButton)

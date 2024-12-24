@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Types/DSTypes.h"
 #include "GameFramework/PlayerController.h"
 #include "DSPlayerController.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTimerStateChangeDelegate, float, Time, ECountdownTimerType, TimerType);
 
 /**
  * 
@@ -18,6 +21,30 @@ public:
 	ADSPlayerController();
 
 	virtual void ReceivedPlayer() override;	// 玩家控制器初始化
+
+	UFUNCTION(Client, Reliable)
+	void Client_TimerUpdate(float CountdownTimeLeft, ECountdownTimerType TimerType);	// 客户端定时器更新
+
+	UFUNCTION(Client, Reliable)
+	void Client_TimerFinished(float CountdownTimeLeft, ECountdownTimerType TimerType);	// 客户端定时器结束
+
+	UFUNCTION(Client, Reliable)
+	void Client_TimerPaused(float CountdownTimeLeft, ECountdownTimerType TimerType);	// 客户端定时器暂停
+
+	UFUNCTION(Client, Reliable)
+	void Client_TimerResumed(float CountdownTimeLeft, ECountdownTimerType TimerType);	// 客户端定时器恢复
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTimerStateChangeDelegate OnTimerUpdated;	// 定时器更新委托
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTimerStateChangeDelegate OnTimerFinished;	// 定时器结束委托
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTimerStateChangeDelegate OnTimerPaused;	// 定时器暂停委托
+
+	UPROPERTY(BlueprintAssignable)
+	FOnTimerStateChangeDelegate OnTimerResumed;	// 定时器恢复委托
 
 protected:
 

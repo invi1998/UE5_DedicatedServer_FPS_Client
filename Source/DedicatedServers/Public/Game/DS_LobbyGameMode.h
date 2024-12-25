@@ -17,9 +17,13 @@ class DEDICATEDSERVERS_API ADS_LobbyGameMode : public ADS_GameModeBase
 	GENERATED_BODY()
 
 public:
+	ADS_LobbyGameMode();
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+	ELobbyStatus LobbyStatus;
 
 private:
 	UPROPERTY()

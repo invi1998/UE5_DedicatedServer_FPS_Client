@@ -6,6 +6,11 @@
 #include "DedicatedServers/DedicatedServers.h"
 #include "Game/DS_GameInstanceSubsystem.h"
 
+ADS_LobbyGameMode::ADS_LobbyGameMode()
+{
+	LobbyStatus = ELobbyStatus::WaitingForPlayers;
+}
+
 void ADS_LobbyGameMode::BeginPlay()
 {
 	Super::BeginPlay();

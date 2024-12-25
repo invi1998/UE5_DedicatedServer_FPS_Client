@@ -32,6 +32,14 @@ enum class EMatchStatus : uint8
 	
 };
 
+UENUM()
+enum class ELobbyStatus : uint8
+{
+	WaitingForPlayers UMETA(DisplayName = "Waiting For Players"),	// 等待玩家
+	CountdownToSeamlessTravel UMETA(DisplayName = "Countdown To Seamless Travel"),	// 无缝旅行倒计时
+	SeamlessTravel UMETA(DisplayName = "Seamless Travel")	// 无缝旅行
+};
+
 USTRUCT(BlueprintType)
 struct FCountdownTimerHandle
 {

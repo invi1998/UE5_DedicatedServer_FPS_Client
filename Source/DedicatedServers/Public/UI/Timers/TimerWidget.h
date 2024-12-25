@@ -7,7 +7,7 @@
 #include "Types/DSTypes.h"
 #include "TimerWidget.generated.h"
 
-class UTextBlock;
+class UCommonTextBlock;
 class ADSPlayerController;
 /**
  * 
@@ -31,13 +31,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	bool bActive = false;	// 是否激活
 
-	UPROPERTY(BlueprintEditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly)
 	bool bCanBeNegative = false;	// 是否可以为负数
 
-	UPROPERTY(BlueprintEditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly)
 	bool bShowMilliseconds = false;	// 是否显示毫秒
 
-	UPROPERTY(BlueprintEditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly)
 	bool bHideOnZero = false;	// 是否在0时隐藏
 
 	UFUNCTION()
@@ -56,7 +56,7 @@ protected:
 
 private:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UTextBlock> TextBlock_Timer;
+	TObjectPtr<UCommonTextBlock> TextBlock_Timer;
 
 	float InternalCountdownTimeLeft = 0.0f;
 

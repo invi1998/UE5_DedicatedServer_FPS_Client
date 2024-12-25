@@ -11,7 +11,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogDS_GameMode, Log, All);
 
 /**
- * 
+ * 主要用于处理连接到GameLift的游戏模式
  */
 UCLASS()
 class DEDICATEDSERVERS_API ADS_GameMode : public ADS_GameModeBase

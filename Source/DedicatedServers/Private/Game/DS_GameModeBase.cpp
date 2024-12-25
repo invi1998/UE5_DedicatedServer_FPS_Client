@@ -5,7 +5,7 @@
 
 #include "Player/DSPlayerController.h"
 
-void ADS_GameModeBase::StartCountdownTimer(FCountdownTimerHandle TimerHandle)
+void ADS_GameModeBase::StartCountdownTimer(FCountdownTimerHandle& TimerHandle)
 {
 	TimerHandle.TimerFinishedDelegate.BindWeakLambda(this, [&]()
 	{
@@ -17,22 +17,15 @@ void ADS_GameModeBase::StartCountdownTimer(FCountdownTimerHandle TimerHandle)
 
 	TimerHandle.UpdateTimerDelegate.BindWeakLambda(this, [&]()
 	{
-		for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-		{
-			ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(*It);
-			if (IsValid(DSPlayerController) && DSPlayerController->IsLocalController())
-			{
-				const float CountdownTimeLeft = TimerHandle.Duration - GetWorldTimerManager().GetTimerElapsed(TimerHandle.TimerFinishedHandle);
-				DSPlayerController->Client_TimerUpdate(CountdownTimeLeft, TimerHandle.Type);
-			}
-		}
+		UpdateCountdownTimer(TimerHandle);
 	});
 
 	GetWorldTimerManager().SetTimer(TimerHandle.UpdateTimerHandle, TimerHandle.UpdateTimerDelegate, TimerHandle.UpdateInterval, true);
 
+	UpdateCountdownTimer(TimerHandle);
 }
 
-void ADS_GameModeBase::PauseCountdownTimer(FCountdownTimerHandle TimerHandle)
+void ADS_GameModeBase::PauseCountdownTimer(FCountdownTimerHandle& TimerHandle)
 {
 	TimerHandle.State = ECountdownTimerState::Paused;
 	// 暂停定时器
@@ -44,7 +37,7 @@ void ADS_GameModeBase::PauseCountdownTimer(FCountdownTimerHandle TimerHandle)
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
 		ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(*It);
-		if (IsValid(DSPlayerController) && DSPlayerController->IsLocalController())
+		if (IsValid(DSPlayerController))
 		{
 			const float CountdownTimeLeft = TimerHandle.Duration - GetWorldTimerManager().GetTimerElapsed(TimerHandle.TimerFinishedHandle);
 			DSPlayerController->Client_TimerPaused(CountdownTimeLeft, TimerHandle.Type);
@@ -52,7 +45,7 @@ void ADS_GameModeBase::PauseCountdownTimer(FCountdownTimerHandle TimerHandle)
 	}
 }
 
-void ADS_GameModeBase::ResumeCountdownTimer(FCountdownTimerHandle TimerHandle)
+void ADS_GameModeBase::ResumeCountdownTimer(FCountdownTimerHandle& TimerHandle)
 {
 	TimerHandle.State = ECountdownTimerState::Started;
 	// 恢复定时器
@@ -64,7 +57,7 @@ void ADS_GameModeBase::ResumeCountdownTimer(FCountdownTimerHandle TimerHandle)
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
 		ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(*It);
-		if (IsValid(DSPlayerController) && DSPlayerController->IsLocalController())
+		if (IsValid(DSPlayerController))
 		{
 			const float CountdownTimeLeft = TimerHandle.Duration - GetWorldTimerManager().GetTimerElapsed(TimerHandle.TimerFinishedHandle);
 			DSPlayerController->Client_TimerResumed(CountdownTimeLeft, TimerHandle.Type);
@@ -72,7 +65,7 @@ void ADS_GameModeBase::ResumeCountdownTimer(FCountdownTimerHandle TimerHandle)
 	}
 }
 
-void ADS_GameModeBase::StopCountdownTimer(FCountdownTimerHandle TimerHandle)
+void ADS_GameModeBase::StopCountdownTimer(FCountdownTimerHandle& TimerHandle)
 {
 	TimerHandle.State = ECountdownTimerState::Finished;
 	// 清除定时器
@@ -93,7 +86,7 @@ void ADS_GameModeBase::StopCountdownTimer(FCountdownTimerHandle TimerHandle)
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
 		ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(*It);
-		if (IsValid(DSPlayerController) && DSPlayerController->IsLocalController())
+		if (IsValid(DSPlayerController))
 		{
 			DSPlayerController->Client_TimerFinished(0.0f, TimerHandle.Type);
 		}
@@ -101,6 +94,19 @@ void ADS_GameModeBase::StopCountdownTimer(FCountdownTimerHandle TimerHandle)
 	
 }
 
-void ADS_GameModeBase::OnCountdownTimerFinished(ECountdownTimerType TimerType)
+void ADS_GameModeBase::UpdateCountdownTimer(const FCountdownTimerHandle& TimerHandle)
+{
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
+	{
+		ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(*It);
+		if (IsValid(DSPlayerController))
+		{
+			const float CountdownTimeLeft = TimerHandle.Duration - GetWorldTimerManager().GetTimerElapsed(TimerHandle.TimerFinishedHandle);
+			DSPlayerController->Client_TimerUpdate(CountdownTimeLeft, TimerHandle.Type);
+		}
+	}
+}
+
+void ADS_GameModeBase::OnCountdownTimerFinished(ECountdownTimerType InTimerType)
 {
 }

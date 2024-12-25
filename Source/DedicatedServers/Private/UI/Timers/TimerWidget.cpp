@@ -3,7 +3,7 @@
 
 #include "UI/Timers/TimerWidget.h"
 
-#include "Components/TextBlock.h"
+#include "CommonUI/Public/CommonTextBlock.h"
 #include "Kismet/KismetStringLibrary.h"
 #include "Player/DSPlayerController.h"
 

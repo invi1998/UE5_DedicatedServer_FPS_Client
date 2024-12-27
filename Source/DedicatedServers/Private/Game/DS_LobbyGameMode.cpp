@@ -52,18 +52,10 @@ void ADS_LobbyGameMode::OnCountdownTimerFinished(ECountdownTimerType InTimerType
 	if (InTimerType == ECountdownTimerType::LobbyCountdown)
 	{
 		// 无缝旅行
-		LobbyStatus = ELobbyStatus::SeamlessTravel;
-		const FString DestinationMapPath = DestinationMap.ToSoftObjectPath().GetAssetName();
-		UE_LOG(LogDedicatedServers, Log, TEXT("Seamless Travel to %s"), *DestinationMapPath)
-		if (GIsEditor)
+		if (LobbyStatus == ELobbyStatus::CountdownToSeamlessTravel)
 		{
-			// 编辑器模式下，直接切换地图
-			UGameplayStatics::OpenLevel(GetWorld(), FName(*DestinationMapPath));
-		}
-		else
-		{
-			// 服务器模式下，无缝旅行
-			GetWorld()->ServerTravel(DestinationMapPath, true, false);
+			LobbyStatus = ELobbyStatus::SeamlessTravel;
+			TrySeamlessTravel(DestinationMap);
 		}
 	}
 }

@@ -3,6 +3,7 @@
 
 #include "Game/DS_GameModeBase.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "Player/DSPlayerController.h"
 
 void ADS_GameModeBase::StartCountdownTimer(FCountdownTimerHandle& TimerHandle)
@@ -109,4 +110,20 @@ void ADS_GameModeBase::UpdateCountdownTimer(const FCountdownTimerHandle& TimerHa
 
 void ADS_GameModeBase::OnCountdownTimerFinished(ECountdownTimerType InTimerType)
 {
+}
+
+void ADS_GameModeBase::TrySeamlessTravel(const TSoftObjectPtr<UWorld>& InDestinationMap) const
+{
+	// 无缝旅行
+	const FString DestinationMapPath = InDestinationMap.ToSoftObjectPath().GetAssetName();
+	if (GIsEditor)
+	{
+		// 编辑器模式下，直接切换地图
+		UGameplayStatics::OpenLevel(GetWorld(), FName(*DestinationMapPath));
+	}
+	else
+	{
+		// 服务器模式下，无缝旅行
+		GetWorld()->ServerTravel(DestinationMapPath, true, false);
+	}
 }

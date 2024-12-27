@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	FCountdownTimerHandle PostMatchTimer;	// 比赛后定时器句柄
 
+	UPROPERTY(EditDefaultsOnly)
+	TSoftObjectPtr<UWorld> LobbyMap;	// 无缝旅行目标地图(大厅地图)
+
 	virtual void OnCountdownTimerFinished(ECountdownTimerType InTimerType) override;
 	
 private:

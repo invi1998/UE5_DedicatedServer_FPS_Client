@@ -76,6 +76,7 @@ void UTimerWidget::TimerStart(float InitialTime)
 {
 	bActive = true;
 	TextBlock_Timer->SetVisibility(ESlateVisibility::Visible);
+	K2_OnTimerStarted(InitialTime, TimerType);
 }
 
 void UTimerWidget::TimerStop()

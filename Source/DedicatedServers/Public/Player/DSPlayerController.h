@@ -34,6 +34,9 @@ public:
 	UFUNCTION(Client, Reliable)
 	void Client_TimerResumed(float CountdownTimeLeft, ECountdownTimerType TimerType);	// 客户端定时器恢复
 
+	UFUNCTION(Client, Reliable)
+	void Client_SetInputEnabled(bool bEnable);	// 设置输入是否可用
+
 	UPROPERTY(BlueprintAssignable)
 	FOnTimerStateChangeDelegate OnTimerUpdated;	// 定时器更新委托
 

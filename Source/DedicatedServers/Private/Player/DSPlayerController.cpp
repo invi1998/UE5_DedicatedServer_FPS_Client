@@ -19,6 +19,18 @@ void ADSPlayerController::ReceivedPlayer()
 	}
 }
 
+void ADSPlayerController::Client_SetInputEnabled_Implementation(bool bEnable)
+{
+	if (bEnable)
+	{
+		EnableInput(this);
+	}
+	else
+	{
+		DisableInput(this);
+	}
+}
+
 // 因为服务器的定时器我们设定是倒计时，也就是说服务器传递的CountdownTimeLeft是倒计时的时间，所以我们需要减去单程时间
 void ADSPlayerController::Client_TimerUpdate_Implementation(float CountdownTimeLeft, ECountdownTimerType TimerType)
 {

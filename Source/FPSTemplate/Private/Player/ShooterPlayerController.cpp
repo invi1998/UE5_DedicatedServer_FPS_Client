@@ -12,6 +12,7 @@ AShooterPlayerController::AShooterPlayerController()
 {
 	bReplicates = true;
 	bPawnAlive = true;
+	bQuitMenuOpen = false;
 }
 
 void AShooterPlayerController::OnPossess(APawn* InPawn)
@@ -66,6 +67,7 @@ void AShooterPlayerController::SetupInputComponent()
 	ShooterInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AShooterPlayerController::Input_Look);
 	ShooterInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &AShooterPlayerController::Input_Crouch);
 	ShooterInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AShooterPlayerController::Input_Jump);
+	ShooterInputComponent->BindAction(QuitAction, ETriggerEvent::Started, this, &AShooterPlayerController::Input_Quit);
 	
 }
 
@@ -105,6 +107,26 @@ void AShooterPlayerController::Input_Jump()
 	if (!bPawnAlive) return;
 	if (GetPawn() == nullptr || !GetPawn()->Implements<UPlayerInterface>()) return;
 	IPlayerInterface::Execute_Initiate_Jump(GetPawn());
+}
+
+void AShooterPlayerController::Input_Quit()
+{
+	// Quit the game
+	bQuitMenuOpen = !bQuitMenuOpen;
+	if (bQuitMenuOpen)
+	{
+		FInputModeGameAndUI InputMode;
+		SetInputMode(InputMode);
+		SetShowMouseCursor(true);
+		OnQuitMenuOpen.Broadcast(true);
+	}
+	else
+	{
+		FInputModeGameOnly InputMode;
+		SetInputMode(InputMode);
+		SetShowMouseCursor(false);
+		OnQuitMenuOpen.Broadcast(false);
+	}
 }
 
 

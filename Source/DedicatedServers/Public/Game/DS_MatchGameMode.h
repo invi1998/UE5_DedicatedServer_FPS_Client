@@ -36,6 +36,8 @@ protected:
 	TSoftObjectPtr<UWorld> LobbyMap;	// 无缝旅行目标地图(大厅地图)
 
 	virtual void OnCountdownTimerFinished(ECountdownTimerType InTimerType) override;
+
+	void SetClientInputEnabled(bool bEnable);
 	
 private:
 	

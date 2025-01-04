@@ -21,6 +21,10 @@ public:
 	ADSPlayerController();
 
 	virtual void ReceivedPlayer() override;	// 玩家控制器初始化
+	virtual void OnRep_PlayerState() override;	// 玩家状态复制
+	virtual void PostSeamlessTravel() override;	// 无缝旅行结束
+
+	virtual void BeginPlay() override;
 
 	UFUNCTION(Client, Reliable)
 	void Client_TimerUpdate(float CountdownTimeLeft, ECountdownTimerType TimerType);	// 客户端定时器更新

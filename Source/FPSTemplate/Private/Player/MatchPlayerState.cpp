@@ -9,7 +9,9 @@
 
 AMatchPlayerState::AMatchPlayerState()
 {
-	NetUpdateFrequency = 100.f; // let's not be sluggish, alright?
+	// NetUpdateFrequency = 100.f; // let's not be sluggish, alright?
+	// NetUpdateFrequency 已经被弃用，SetNetUpdateFrequency 替代
+	SetNetUpdateFrequency(100.f);		// 设置网络更新频率
 	
 	ScoredElims = 0;
 	Defeats = 0;

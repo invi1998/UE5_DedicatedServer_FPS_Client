@@ -18,6 +18,20 @@ void ADS_MatchGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
+	// 对于无缝旅行（Seamless Travel）的玩家，登录后是不会被调用PostLogin
+	// 所以我们需要在InitSeamlessTravelPlayer中调用CheckAndStartLobbyCountdown
+	
+	if (MatchStatus == EMatchStatus::WaitingForPlayers)
+	{
+		MatchStatus = EMatchStatus::PreMatch;
+		StartCountdownTimer(PreMatchTimer);
+	}
+}
+
+void ADS_MatchGameMode::InitSeamlessTravelPlayer(AController* NewController)
+{
+	Super::InitSeamlessTravelPlayer(NewController);
+
 	if (MatchStatus == EMatchStatus::WaitingForPlayers)
 	{
 		MatchStatus = EMatchStatus::PreMatch;
@@ -38,18 +52,21 @@ void ADS_MatchGameMode::OnCountdownTimerFinished(ECountdownTimerType InTimerType
 
 	if (InTimerType == ECountdownTimerType::PreMatchCountdown)
 	{
+		StopCountdownTimer(PreMatchTimer);
 		MatchStatus = EMatchStatus::InMatch;
 		StartCountdownTimer(MatchTimer);
 		SetClientInputEnabled(true);
 	}
 	if (InTimerType == ECountdownTimerType::MatchCountdown)
 	{
+		StopCountdownTimer(MatchTimer);
 		MatchStatus = EMatchStatus::PostMatch;
 		StartCountdownTimer(PostMatchTimer);
 		SetClientInputEnabled(false);
 	}
 	if (InTimerType == ECountdownTimerType::PostMatchCountdown)
 	{
+		StopCountdownTimer(PostMatchTimer);
 		MatchStatus = EMatchStatus::SeamlessTravel;
 		TrySeamlessTravel(LobbyMap);
 	}

@@ -92,6 +92,7 @@ void ADS_LobbyGameMode::OnCountdownTimerFinished(ECountdownTimerType InTimerType
 		// 无缝旅行
 		if (LobbyStatus == ELobbyStatus::CountdownToSeamlessTravel)
 		{
+			StopCountdownTimer(LobbyCountdownTimer);
 			LobbyStatus = ELobbyStatus::SeamlessTravel;
 			TrySeamlessTravel(DestinationMap);
 		}

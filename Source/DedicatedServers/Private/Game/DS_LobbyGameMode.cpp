@@ -23,6 +23,7 @@ void ADS_LobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 	
 	CheckAndStartLobbyCountdown();
+	UE_LOG(LogTemp, Warning, TEXT("ADS_LobbyGameMode::PostLogin: %s"), *NewPlayer->GetName());
 }
 
 void ADS_LobbyGameMode::Logout(AController* Exiting)
@@ -31,7 +32,7 @@ void ADS_LobbyGameMode::Logout(AController* Exiting)
 	
 	CheckAndStopLobbyCountdown();
 	RemovePlayerSession(Exiting);
-
+	UE_LOG(LogTemp, Warning, TEXT("ADS_LobbyGameMode::Logout: %s"), *Exiting->GetName());
 }
 
 void ADS_LobbyGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
@@ -43,6 +44,7 @@ void ADS_LobbyGameMode::PreLogin(const FString& Options, const FString& Address,
 	const FString UserName = UGameplayStatics::ParseOption(Options, TEXT("UserName"));
 
 	TryAcceptPlayerSession(PlayerSessionId, UserName, ErrorMessage);
+	UE_LOG(LogTemp, Warning, TEXT("ADS_LobbyGameMode::PreLogin: UserName: %s, PlayerSessionId: %s"), *UserName, *PlayerSessionId);
 }
 
 FString ADS_LobbyGameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
@@ -59,6 +61,8 @@ FString ADS_LobbyGameMode::InitNewPlayer(APlayerController* NewPlayerController,
 		DSPlayerController->PlayerSessionId = PlayerSessionId;
 		DSPlayerController->UserName = UserName;
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("ADS_LobbyGameMode::InitNewPlayer: UserName: %s, PlayerSessionId: %s"), *UserName, *PlayerSessionId);
 	
 	return InitializedString;
 	
@@ -76,6 +80,7 @@ void ADS_LobbyGameMode::InitSeamlessTravelPlayer(AController* NewController)
 	Super::InitSeamlessTravelPlayer(NewController);
 	
 	CheckAndStartLobbyCountdown();
+	UE_LOG(LogTemp, Warning, TEXT("ADS_LobbyGameMode::InitSeamlessTravelPlayer: %s"), *NewController->GetName());
 }
 
 void ADS_LobbyGameMode::OnCountdownTimerFinished(ECountdownTimerType InTimerType)

@@ -18,7 +18,8 @@ public class DedicatedServers : ModuleRules
 			"HTTP",
 			"Json",
 			"JsonUtilities",
-			"CommonUI"
+			"CommonUI",
+			"NetCore"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

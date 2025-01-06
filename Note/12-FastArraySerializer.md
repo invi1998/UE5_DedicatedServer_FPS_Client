@@ -1,5 +1,7 @@
 # Array Replication
 
+> 该功能包含在 NetCore 模块中
+
 在Unreal Engine 5 (UE5)中，Array Replication（数组复制）和Fast Array Serializer（快速数组序列化器）是与网络编程和数据同步相关的两个特性。它们用于确保在网络游戏中，客户端和服务器之间的复杂数据结构如数组能够高效、准确地进行同步。
 
 ### Array Replication
@@ -304,3 +306,76 @@ struct TStructOpsTypeTraits<FExampleArray> : public TStructOpsTypeTraitsBase2<FE
 在这个示例中，我们定义了一个 `FExampleItemEntry` 结构体，它继承自 `FFastArraySerializerItem` 并包含了两个可复制的属性。然后，我们创建了一个 `FExampleArray` 结构体来封装这个 `TArray`，并实现了必要的 `NetDeltaSerialize` 方法。最后，我们启用了 `NetDeltaSerializer` 特性，以便引擎知道使用我们的自定义序列化方法。
 
 通过这种方式，你可以显著提高大型数组的同步性能，减少带宽消耗，并确保客户端和服务器之间的数据一致性。
+
+
+
+`NetDeltaSerialize` 是 Unreal Engine 中用于网络同步的一个关键函数，特别是在处理动态数据结构（如 `TArray`）时。它的主要目的是在客户端和服务器之间高效地传输数据变化，而不是每次都发送整个数据集。这样可以显著减少网络流量，并提高性能。
+
+### `NetDeltaSerialize` 的作用
+
+1. **差异化序列化**:
+   - 传统的 `NetSerialize` 方法会在每次更新时将整个数据集序列化并发送给客户端。
+   - `NetDeltaSerialize` 只会序列化自上次发送以来发生变化的部分数据，从而节省带宽。
+
+2. **基础状态管理**:
+   - 维护一个“基础状态”，即上一次发送给客户端的数据快照。
+   - 在进行差异化序列化时，将当前状态与基础状态进行比较，找出差异部分。
+
+3. **增量更新**:
+   - 发送新增、修改和删除的元素，而不是整个数组。
+   - 这种方式特别适用于大型数组，因为只需要传输变化的部分。
+
+### `NetDeltaSerialize` 的实现
+
+在 Fast TArray Replication 中，`NetDeltaSerialize` 函数通常通过调用 `FastArrayDeltaSerialize` 来实现。以下是对这个过程的详细解释：
+
+#### 示例代码中的 `NetDeltaSerialize`
+
+让我们回到之前的示例代码，看看 `NetDeltaSerialize` 是如何实现的：
+
+
+
+#### 详细步骤
+
+1. **继承 `FFastArraySerializerItem`**:
+   - `FExampleItemEntry` 结构体继承自 `FFastArraySerializerItem`，这使得它可以被包含在 `FFastArraySerializer` 中进行高效的网络同步。
+
+2. **定义数据成员**:
+   - `ExampleIntProperty` 和 `ExampleFloatProperty` 是需要在网络中同步的属性。
+   - 使用 `UPROPERTY(Replicated)` 宏标记这些属性为可复制属性。
+
+3. **实现 `NetDeltaSerialize`**:
+   - 在 `FExampleArray` 结构体中重写了 `NetDeltaSerialize` 函数。
+   - 调用了 `FFastArraySerializer::FastArrayDeltaSerialize` 模板方法，传入 `Items` 数组、`DeltaParms` 参数以及当前对象 `*this`。
+
+4. **启用 `NetDeltaSerializer` 特性**:
+   - 通过模板特化 `TStructOpsTypeTraits` 设置 `WithNetDeltaSerializer` 为 `true`，告诉引擎使用自定义的 `NetDeltaSerialize` 方法。
+
+### `FastArrayDeltaSerialize` 的工作原理
+
+`FastArrayDeltaSerialize` 是一个模板方法，专门用于处理 `TArray` 的差异化序列化。以下是它的工作流程：
+
+1. **构建基础状态映射**:
+   - 创建一个映射，关联每个元素的 `ReplicationID` 和 `ReplicationKey`。
+   - 这些 ID 和 Key 用于跟踪数组中的每个元素及其状态。
+
+2. **检测变化**:
+   - 遍历当前数组中的每个元素，检查其 `ReplicationKey` 是否发生变化。
+   - 如果发现新的元素或已存在的元素发生了变化，则将其标记为“脏”。
+
+3. **生成差异包**:
+   - 将新增的元素编码到网络包中。
+   - 将修改过的元素编码到网络包中。
+   - 将删除的元素编码到网络包中。
+
+4. **更新基础状态**:
+   - 更新基础状态映射，以反映最新的数组状态。
+   - 这样，在下一次同步时，可以基于最新的基础状态来计算差异。
+
+5. **发送网络包**:
+   - 将生成的差异包发送给客户端。
+   - 客户端接收到差异包后，根据其中的信息更新本地数组。
+
+### 总结
+
+`NetDeltaSerialize` 函数是 Unreal Engine 中用于高效网络同步的关键机制之一。通过 `FastArrayDeltaSerialize` 的实现，它可以显著减少网络流量，提高大型数组的同步性能。具体来说，它通过维护基础状态映射、检测变化、生成差异包并更新基础状态来实现这一目标。

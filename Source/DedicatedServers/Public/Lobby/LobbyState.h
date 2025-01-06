@@ -9,6 +9,19 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerInfoChanged, const FLobbyPlayerInfo&, PlayerInfo);
 
+
+USTRUCT()
+struct FLobbyPlayerInfoDelta
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<FLobbyPlayerInfo> AddedPlayerInfos;
+	
+	UPROPERTY()
+	TArray<FLobbyPlayerInfo> RemovedPlayerInfos;
+};
+
 UCLASS()
 class DEDICATEDSERVERS_API ALobbyState : public AInfo
 {
@@ -33,8 +46,12 @@ protected:
 	void OnRep_LobbyPlayerInfoArray();
 
 private:
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_LobbyPlayerInfoArray)
 	FLobbyPlayerInfoArray PlayerInfoArray;
-	
 
+	// 因为我们需要差异化比较，但是对于数组我们无法像普通类型的复制变量一样传递该类型参数的旧值，所以我们需要一个临时数组来存储上一次的玩家信息
+	UPROPERTY()
+	FLobbyPlayerInfoArray LastPlayerInfoArray;
+
+	static FLobbyPlayerInfoDelta ComputePlayerInfoDelta(const TArray<FLobbyPlayerInfo>& NewPlayerInfoArray, const TArray<FLobbyPlayerInfo>& OldPlayerInfoArray);
 };

@@ -20,6 +20,7 @@ public:
 	ADS_LobbyGameMode();
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;	// 玩家退出
+	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;	// 玩家登录前
 
 protected:
 	virtual void BeginPlay() override;

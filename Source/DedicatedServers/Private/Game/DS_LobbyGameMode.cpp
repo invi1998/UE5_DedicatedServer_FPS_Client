@@ -31,6 +31,17 @@ void ADS_LobbyGameMode::Logout(AController* Exiting)
 	CheckAndStopLobbyCountdown();
 }
 
+void ADS_LobbyGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
+{
+	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+
+	// 解析玩家登录参数
+	const FString PlayerSessionId = UGameplayStatics::ParseOption(Options, TEXT("PlayerSessionId"));
+	const FString UserName = UGameplayStatics::ParseOption(Options, TEXT("UserName"));
+
+	
+}
+
 void ADS_LobbyGameMode::BeginPlay()
 {
 	Super::BeginPlay();

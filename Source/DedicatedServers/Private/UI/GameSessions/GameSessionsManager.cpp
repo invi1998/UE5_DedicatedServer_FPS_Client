@@ -92,11 +92,14 @@ void UGameSessionsManager::CreatePlayerSession_Response(FHttpRequestPtr Request,
 			LocalPlayerController->SetInputMode(InputModeGameOnly);
 			LocalPlayerController->SetShowMouseCursor(false);
 		}
+
+		const FString Options = FString::Printf(TEXT("?PlayerSessionId=%s?UserName=%s"), *PlayerSession.PlayerSessionId, *PlayerSession.PlayerId);
 		
 		// 进入游戏
 		const FString IpAndPort = PlayerSession.IpAddress + FString::Printf(TEXT(":%d"), PlayerSession.Port);
 		const FName Address(*IpAndPort);
-		UGameplayStatics::OpenLevel(this, Address);
+		UGameplayStatics::OpenLevel(this, Address, true, Options);
+		// 无缝旅行，携带参数，如何获取参数？我们可以在GameMode中获取
 	}
 }
 
@@ -120,7 +123,11 @@ void UGameSessionsManager::HandleGameSessionStatus(const FString& Status, const 
 {
 	if (Status.Equals(TEXT("ACTIVE")))
 	{
-		TryCreatePlayerSession(SessionId, GetUniquePlayerID());
+		UDSLocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem();
+		if (IsValid(LocalPlayerSubsystem))
+		{
+			TryCreatePlayerSession(SessionId, LocalPlayerSubsystem->UserName);
+		}
 	}
 	else if (Status.Equals(TEXT("ACTIVATING")))
 	{

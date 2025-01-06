@@ -49,6 +49,7 @@ private:
 	
 	void InitGameLift();
 	void SetServerParameters(FServerParameters& OutServerParameters);
+	void TryAcceptPlayerSession(const FString& PlayerSessionId, const FString& UserName, FString& OutErrorMessage);
 	
 };
 

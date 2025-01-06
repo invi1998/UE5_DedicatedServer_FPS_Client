@@ -39,7 +39,7 @@ void ADS_LobbyGameMode::PreLogin(const FString& Options, const FString& Address,
 	const FString PlayerSessionId = UGameplayStatics::ParseOption(Options, TEXT("PlayerSessionId"));
 	const FString UserName = UGameplayStatics::ParseOption(Options, TEXT("UserName"));
 
-	
+	TryAcceptPlayerSession(PlayerSessionId, UserName, ErrorMessage);
 }
 
 void ADS_LobbyGameMode::BeginPlay()
@@ -136,4 +136,64 @@ void ADS_LobbyGameMode::SetServerParameters(FServerParameters& OutServerParamete
 	// 进程ID
 	OutServerParameters.m_processId = FString::Printf(TEXT("%d"), FPlatformProcess::GetCurrentProcessId());
 	UE_LOG(LogDedicatedServers, Log, TEXT("PROCESS_ID [PID]: %s"), *OutServerParameters.m_processId)
+}
+
+void ADS_LobbyGameMode::TryAcceptPlayerSession(const FString& PlayerSessionId, const FString& UserName, FString& OutErrorMessage)
+{
+	if (PlayerSessionId.IsEmpty() || UserName.IsEmpty())
+	{
+		OutErrorMessage = TEXT("PlayerSessionId or UserName is empty");
+		return;
+	}
+
+	// 调用GameLift接口，接受玩家会话
+#if WITH_GAMELIFT
+	// GameLift SDK
+	// 如何接收玩家会话？
+	// 1. 调用GameLiftServerSDK::DescribePlayerSessions，获取玩家会话信息
+	Aws::GameLift::Server::Model::DescribePlayerSessionsRequest DescribePlayerSessionsRequest;
+	DescribePlayerSessionsRequest.SetPlayerSessionId(TCHAR_TO_ANSI(*PlayerSessionId));	// TCHAR_TO_ANSI 将FString转换为char*
+	// 获取玩家会话信息
+	const Aws::GameLift::DescribePlayerSessionsOutcome& DescribePlayerSessionOutcome = Aws::GameLift::Server::DescribePlayerSessions(DescribePlayerSessionsRequest);
+	if (!DescribePlayerSessionOutcome.IsSuccess())
+	{
+		OutErrorMessage = TEXT("Failed to describe player session");
+		return;
+	}
+	// 2. 比较玩家会话ID，如果匹配，则接受玩家会话
+	const Aws::GameLift::Server::Model::DescribePlayerSessionsResult& DescribePlayerSessionsResult = DescribePlayerSessionOutcome.GetResult();
+	int32 PlayerSessionCount = 0;
+	const Aws::GameLift::Server::Model::PlayerSession* PlayerSessions = DescribePlayerSessionsResult.GetPlayerSessions(PlayerSessionCount);
+	if (PlayerSessions == nullptr || PlayerSessionCount == 0)
+	{
+		OutErrorMessage = TEXT("GetPlayerSession Failed (Player session is null OR Player session count is 0)");
+		return;
+	}
+
+	// 3. 遍历玩家会话，比较玩家会话ID
+	for (int32 i = 0; i < PlayerSessionCount; ++i)
+	{
+		const Aws::GameLift::Server::Model::PlayerSession& PlayerSession = PlayerSessions[i];
+		if (!UserName.Equals(ANSI_TO_TCHAR(PlayerSession.GetPlayerId()))) continue;
+		if (PlayerSession.GetStatus() != Aws::GameLift::Server::Model::PlayerSessionStatus::RESERVED)
+		{
+			OutErrorMessage = FString::Printf(TEXT("Player session status is not RESERVED, User: %s"), *UserName);
+			return;
+		}
+
+		// 4. 接受玩家会话
+		const Aws::GameLift::GenericOutcome& AcceptPlayerSessionGenericOutcome = Aws::GameLift::Server::AcceptPlayerSession(TCHAR_TO_ANSI(*PlayerSessionId));
+		if (!AcceptPlayerSessionGenericOutcome.IsSuccess())
+		{
+			OutErrorMessage = FString::Printf(TEXT("Failed to accept player session, User: %s"), *UserName);
+			return;
+		}
+		return;
+	}
+	
+
+#endif
+	
+	
+	
 }

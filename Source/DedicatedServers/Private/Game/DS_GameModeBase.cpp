@@ -3,6 +3,7 @@
 
 #include "Game/DS_GameModeBase.h"
 
+#include "aws/gamelift/server/GameLiftServerAPI.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/DSPlayerController.h"
 
@@ -126,4 +127,23 @@ void ADS_GameModeBase::TrySeamlessTravel(const TSoftObjectPtr<UWorld>& InDestina
 		// 服务器模式下，无缝旅行
 		GetWorld()->ServerTravel(DestinationMapPath, true, false);
 	}
+}
+
+void ADS_GameModeBase::RemovePlayerSession(AController* Exiting) const
+{
+	ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(Exiting);
+	if (!IsValid(DSPlayerController)) return;
+
+#if WITH_GAMELIFT
+	// GameLift SDK
+	// 如何释放玩家会话？
+	// 1. 调用GameLiftServerSDK::RemovePlayerSession，释放玩家会话
+	const FString PlayerSessionId = DSPlayerController->PlayerSessionId;
+	if (!PlayerSessionId.IsEmpty())
+	{
+		Aws::GameLift::Server::RemovePlayerSession(TCHAR_TO_ANSI(*PlayerSessionId));
+	}
+
+#endif
+	
 }

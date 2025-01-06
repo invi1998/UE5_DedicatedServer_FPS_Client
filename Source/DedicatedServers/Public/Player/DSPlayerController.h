@@ -53,6 +53,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnTimerStateChangeDelegate OnTimerResumed;	// 定时器恢复委托
 
+	UPROPERTY(BlueprintReadOnly)
+	FString PlayerSessionId{};	// 玩家会话ID
+
+	UPROPERTY(BlueprintReadOnly)
+	FString UserName{};	// 用户名
+
 protected:
 
 	UFUNCTION(Server, Reliable)

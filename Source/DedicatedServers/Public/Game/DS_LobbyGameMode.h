@@ -21,7 +21,8 @@ public:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	virtual void Logout(AController* Exiting) override;	// 玩家退出
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;	// 玩家登录前
-
+	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = L"") override;
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void InitSeamlessTravelPlayer(AController* NewController) override;		// 初始化无缝旅行玩家

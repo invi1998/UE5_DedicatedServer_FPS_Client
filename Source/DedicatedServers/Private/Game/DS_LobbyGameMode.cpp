@@ -6,6 +6,7 @@
 #include "DedicatedServers/DedicatedServers.h"
 #include "Game/DS_GameInstanceSubsystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/DSPlayerController.h"
 
 ADS_LobbyGameMode::ADS_LobbyGameMode()
 {
@@ -29,6 +30,8 @@ void ADS_LobbyGameMode::Logout(AController* Exiting)
 	Super::Logout(Exiting);
 	
 	CheckAndStopLobbyCountdown();
+	RemovePlayerSession(Exiting);
+
 }
 
 void ADS_LobbyGameMode::PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage)
@@ -40,6 +43,25 @@ void ADS_LobbyGameMode::PreLogin(const FString& Options, const FString& Address,
 	const FString UserName = UGameplayStatics::ParseOption(Options, TEXT("UserName"));
 
 	TryAcceptPlayerSession(PlayerSessionId, UserName, ErrorMessage);
+}
+
+FString ADS_LobbyGameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
+{
+	FString InitializedString = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
+
+	// 这里我们在初始化玩家时，将玩家会话ID和用户名传递给玩家控制器进行保存
+	const FString PlayerSessionId = UGameplayStatics::ParseOption(Options, TEXT("PlayerSessionId"));
+	const FString UserName = UGameplayStatics::ParseOption(Options, TEXT("UserName"));
+
+	ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(NewPlayerController);
+	if (IsValid(DSPlayerController))
+	{
+		DSPlayerController->PlayerSessionId = PlayerSessionId;
+		DSPlayerController->UserName = UserName;
+	}
+	
+	return InitializedString;
+	
 }
 
 void ADS_LobbyGameMode::BeginPlay()

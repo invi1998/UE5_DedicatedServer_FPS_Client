@@ -26,5 +26,7 @@ protected:
 	virtual void OnCountdownTimerFinished(ECountdownTimerType InTimerType);	// 定时器结束
 	
 	void TrySeamlessTravel(const TSoftObjectPtr<UWorld>& InDestinationMap) const;		// 尝试无缝旅行
+
+	void RemovePlayerSession(AController* Exiting) const;		// 移除玩家会话
 };
 

@@ -25,6 +25,13 @@ void ADS_MatchGameMode::PostLogin(APlayerController* NewPlayer)
 	}
 }
 
+void ADS_MatchGameMode::Logout(AController* Exiting)
+{
+	Super::Logout(Exiting);
+
+	RemovePlayerSession(Exiting);
+}
+
 void ADS_MatchGameMode::OnCountdownTimerFinished(ECountdownTimerType InTimerType)
 {
 	Super::OnCountdownTimerFinished(InTimerType);

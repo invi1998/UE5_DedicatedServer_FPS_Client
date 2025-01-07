@@ -51,6 +51,7 @@ private:
 	void InitGameLift();
 	void SetServerParameters(FServerParameters& OutServerParameters);
 	void TryAcceptPlayerSession(const FString& PlayerSessionId, const FString& UserName, FString& OutErrorMessage);
-	
+	void AddPlayerInfoToLobbyState(AController* Player) const;
+	void RemovePlayerInfoFromLobbyState(AController* Player) const;
 };
 

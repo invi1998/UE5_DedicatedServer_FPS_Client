@@ -40,6 +40,7 @@ public:
 
 	void AddPlayerInfo(const FLobbyPlayerInfo& PlayerInfo);
 	void RemovePlayerInfo(const FString& PlayerId);
+	TArray<FLobbyPlayerInfo>& GetPlayerInfoArray();
 	
 protected:
 	UFUNCTION()

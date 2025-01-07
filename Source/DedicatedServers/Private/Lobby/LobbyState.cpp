@@ -31,6 +31,11 @@ void ALobbyState::RemovePlayerInfo(const FString& PlayerId)
 	PlayerInfoArray.RemovePlayer(PlayerId);
 }
 
+TArray<FLobbyPlayerInfo>& ALobbyState::GetPlayerInfoArray()
+{
+	return PlayerInfoArray.Players;
+}
+
 void ALobbyState::OnRep_LobbyPlayerInfoArray()
 {
 	FLobbyPlayerInfoDelta Delta = ComputePlayerInfoDelta(PlayerInfoArray.Players, LastPlayerInfoArray.Players);

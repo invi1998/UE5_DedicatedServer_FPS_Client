@@ -39,5 +39,8 @@ protected:
 	UFUNCTION()
 	void LobbyStateInitialized(ALobbyState* InLobbyState);
 
+private:
+	UPlayerLabel* FindPlayerLabel(const FString& PlayerId) const;
 	
 };
+

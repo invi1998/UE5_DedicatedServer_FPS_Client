@@ -19,6 +19,8 @@ public:
 	void SetUserName(const FString& InUserName);
 	void SetPlayerSessionId(const FString& InPlayerSessionId);
 
+	FString GetPlayerSessionId() const;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> TextBlock_UserName;

@@ -41,6 +41,8 @@ void ULobbyPlayerBox::UpdatePlayerInfo(ALobbyState* InLobbyState)
 
 void ULobbyPlayerBox::AddPlayer(const FLobbyPlayerInfo& PlayerInfo)
 {
+	if (FindPlayerLabel(PlayerInfo.PlayerSessionId) != nullptr) return;
+	
 	if (!IsValid(PlayerLabelClass)) return;
 
 	UPlayerLabel* PlayerLabel = CreateWidget<UPlayerLabel>(this, PlayerLabelClass);
@@ -56,6 +58,11 @@ void ULobbyPlayerBox::AddPlayer(const FLobbyPlayerInfo& PlayerInfo)
 
 void ULobbyPlayerBox::RemovePlayer(const FLobbyPlayerInfo& PlayerInfo)
 {
+	UPlayerLabel* PlayerLabel = FindPlayerLabel(PlayerInfo.PlayerSessionId);
+	if (IsValid(PlayerLabel))
+	{
+		ScrollBox_PlayerList->RemoveChild(PlayerLabel);
+	}
 }
 
 void ULobbyPlayerBox::LobbyStateInitialized(ALobbyState* InLobbyState)
@@ -71,4 +78,18 @@ void ULobbyPlayerBox::LobbyStateInitialized(ALobbyState* InLobbyState)
 	}
 	UpdatePlayerInfo(InLobbyState);
 	
+}
+
+UPlayerLabel* ULobbyPlayerBox::FindPlayerLabel(const FString& PlayerId) const
+{
+	for (UWidget* Widget : ScrollBox_PlayerList->GetAllChildren())
+	{
+		UPlayerLabel* PlayerLabel = Cast<UPlayerLabel>(Widget);
+		if (IsValid(PlayerLabel) && PlayerLabel->GetPlayerSessionId().Equals(PlayerId))
+		{
+			return PlayerLabel;
+		}
+	}
+
+	return nullptr;
 }

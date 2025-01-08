@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HttpFwd.h"
 #include "HTTP/HTTPRequestManager.h"
 #include "GameStatsManager.generated.h"
 
@@ -18,4 +19,7 @@ class DEDICATEDSERVERS_API UGameStatsManager : public UHTTPRequestManager
 
 public:
 	void RecordMatchStats(const FDSRecordMatchStatsInput& MatchStatsInput);
+
+private:
+	void RecordMatchStats_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 };

@@ -3,7 +3,6 @@
 
 #include "HTTP/HTTPRequestManager.h"
 
-#include "HTTPRequestTypes.h"
 #include "JsonObjectConverter.h"
 #include "DedicatedServers/DedicatedServers.h"
 #include "Player/DSLocalPlayerSubsystem.h"

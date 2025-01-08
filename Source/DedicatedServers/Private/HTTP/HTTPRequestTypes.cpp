@@ -1,6 +1,7 @@
 ﻿// // Copyright invi1998
 
-#include "HTTPRequestTypes.h"
+
+#include "HTTP/HTTPRequestTypes.h"
 
 #include "DedicatedServers/DedicatedServers.h"
 

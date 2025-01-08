@@ -40,6 +40,8 @@ protected:
 	virtual void OnCountdownTimerFinished(ECountdownTimerType InTimerType) override;
 
 	void SetClientInputEnabled(bool bEnable);
+
+	void OnMatchTimerFinished();
 	
 private:
 	

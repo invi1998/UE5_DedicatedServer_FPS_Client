@@ -11,6 +11,7 @@
 #include "HTTP/HTTPRequestTypes.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
+#include "Player/DSLocalPlayerSubsystem.h"
 
 void UGameStatsManager::RecordMatchStats(const FDSRecordMatchStatsInput& MatchStatsInput)
 {
@@ -29,6 +30,14 @@ void UGameStatsManager::RecordMatchStats(const FDSRecordMatchStatsInput& MatchSt
 	Request->SetURL(API_url);
 	Request->SetVerb(TEXT("POST"));
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	UDSLocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem();
+	if (IsValid(LocalPlayerSubsystem))
+	{
+		const FString AccessToken = LocalPlayerSubsystem->GetAuthenticationResult().AccessToken;
+		Request->SetHeader(TEXT("Authorization"), AccessToken);
+	}
+	
 	Request->SetContentAsString(MatchStatsJsonString);
 
 	Request->OnProcessRequestComplete().BindUObject(this, &UGameStatsManager::RecordMatchStats_Response);

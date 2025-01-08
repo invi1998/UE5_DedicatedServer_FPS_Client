@@ -22,6 +22,7 @@ namespace DedicatedServersTags
 	namespace GameStatsAPI
 	{
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(RecordMatchStats, "DedicatedServersTags.GameStatsAPI.RecordMatchStats", "记录比赛统计数据");
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(RetrieveMatchStats, "DedicatedServersTags.GameStatsAPI.RetrieveMatchStats", "检索比赛统计数据");
 	}
 }
 

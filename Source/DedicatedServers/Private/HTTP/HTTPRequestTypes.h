@@ -383,4 +383,59 @@ struct FDSInitiateAuthResponse
 	void Dump() const;
 };
 
+USTRUCT()
+struct FDSMatchStats
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	int32 scoredElims{};	// 得分
+
+	UPROPERTY()
+	int32 defeats{};		// 失败
+
+	UPROPERTY()
+	int32 hits{};			// 击中
+
+	UPROPERTY()
+	int32 misses{};			// 错过
+
+	UPROPERTY()
+	int32 headShotElims{};	// 爆头击杀
+
+	UPROPERTY()
+	int32 highestStreak{};	// 最高连杀
+
+	UPROPERTY()
+	int32 revengeElims{};	// 复仇击杀
+
+	UPROPERTY()
+	int32 dethroneElims{};	// 排位击杀
+
+	UPROPERTY()
+	int32 showStopperElims{};	// 终结者击杀
+
+	UPROPERTY()
+	int32 gotFirstBlood{};	// 得到第一滴血
+
+	UPROPERTY()
+	int32 matchWins{};		// 比赛胜利
+
+	UPROPERTY()
+	int32 matchLosses{};	// 比赛失败
+	
+};
+
+USTRUCT()
+struct FDSRecordMatchStatsInput
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString userName{};		// 玩家名
+
+	UPROPERTY()
+	FDSMatchStats matchStats;	// 比赛统计
+};
+
 

@@ -5,6 +5,7 @@
 
 #include "CommonButtonBase.h"
 #include "Components/WidgetSwitcher.h"
+#include "UI/GameStats/GameStatsManager.h"
 #include "UI/portal/Dashboard/CareerPage.h"
 #include "UI/portal/Dashboard/GamePage.h"
 #include "UI/portal/Dashboard/Leaderboard.h"
@@ -20,6 +21,13 @@ void UDashboardOverlay::NativeConstruct()
 	Button_Career->OnClicked().AddUObject(this, &UDashboardOverlay::ShowCareerPage);
 	Button_Leaderboard->OnClicked().AddUObject(this, &UDashboardOverlay::ShowLeaderboard);
 	Button_Setting->OnClicked().AddUObject(this, &UDashboardOverlay::ShowSettingPage);
+
+	GameStatsManager = NewObject<UGameStatsManager>(this, GameStatsManagerClass);
+	if (IsValid(GameStatsManager))
+	{
+		GameStatsManager->OnRetrieveMatchStatsReceived.AddDynamic(CareerPage, &UCareerPage::OnRetrieveMatchStatsReceived);
+		GameStatsManager->RetrieveMatchStatsStatusMessageDelegate.AddDynamic(CareerPage, &UCareerPage::SetMatchStats);
+	}
 }
 
 void UDashboardOverlay::ShowGamePage()
@@ -29,7 +37,17 @@ void UDashboardOverlay::ShowGamePage()
 
 void UDashboardOverlay::ShowCareerPage()
 {
+	Button_Career->SetIsEnabled(false);
+	Button_Game->SetIsEnabled(false);
+	Button_Leaderboard->SetIsEnabled(false);
+	Button_Setting->SetIsEnabled(false);
+	
 	WidgetSwitcher->SetActiveWidget(CareerPage);
+
+	Button_Career->SetIsEnabled(true);
+	Button_Game->SetIsEnabled(true);
+	Button_Leaderboard->SetIsEnabled(true);
+	Button_Setting->SetIsEnabled(true);
 }
 
 void UDashboardOverlay::ShowLeaderboard()
@@ -40,4 +58,9 @@ void UDashboardOverlay::ShowLeaderboard()
 void UDashboardOverlay::ShowSettingPage()
 {
 	WidgetSwitcher->SetActiveWidget(SettingPage);
+}
+
+void UDashboardOverlay::SetEnableButton(UCommonButtonBase* Button, bool bEnable)
+{
+	Button->SetIsEnabled(bEnable);
 }

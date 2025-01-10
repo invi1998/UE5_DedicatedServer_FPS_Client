@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "DashboardOverlay.generated.h"
 
+class UGameStatsManager;
 class USettingPage;
 class ULeaderboard;
 class UCareerPage;
@@ -52,6 +53,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta=(BindWidget))
 	TObjectPtr<UCommonButtonBase> Button_Setting;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameStatsManager> GameStatsManagerClass;
+
+protected:
+	 virtual void NativeConstruct() override;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UGameStatsManager> GameStatsManager;
+
 	UFUNCTION()
 	void ShowGamePage();
 
@@ -64,9 +75,6 @@ public:
 	UFUNCTION()
 	void ShowSettingPage();
 
-protected:
-	 virtual void NativeConstruct() override;
-
-private:
+	void SetEnableButton(UCommonButtonBase* Button, bool bEnable);
 
 };

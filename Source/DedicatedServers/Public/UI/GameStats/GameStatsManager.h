@@ -26,6 +26,9 @@ public:
 	void RetrieveMatchStats();
 
 	UPROPERTY(BlueprintAssignable)
+	FAPIStatusMessage RetrieveMatchStatsStatusMessageDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
 	FOnRetrieveMatchStatsReceived OnRetrieveMatchStatsReceived;	// 当接收到比赛统计数据时触发
 
 private:

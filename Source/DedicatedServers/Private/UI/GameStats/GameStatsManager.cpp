@@ -91,7 +91,7 @@ void UGameStatsManager::RetrieveMatchStats_Response(FHttpRequestPtr Request, FHt
 {
 	if (!bWasSuccessful)
 	{
-		UE_LOG(LogDedicatedServers, Error, TEXT("RetrieveMatchStats request failed"));
+		OnRetrieveMatchStatsReceived.Broadcast(FDSRetrieveMatchStatsResponse());
 		return;
 	}
 
@@ -104,5 +104,11 @@ void UGameStatsManager::RetrieveMatchStats_Response(FHttpRequestPtr Request, FHt
 		{
 			return;
 		}
+
+		FDSRetrieveMatchStatsResponse RetrieveMatchStatsResponse;
+		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &RetrieveMatchStatsResponse);
+		RetrieveMatchStatsResponse.Dump();
+
+		OnRetrieveMatchStatsReceived.Broadcast(RetrieveMatchStatsResponse);
 	}
 }

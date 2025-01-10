@@ -11,6 +11,11 @@ void UDSImageButtun::SetTitle(const FString& Title)
 	TextBlock_Title->SetText(FText::FromString(Title));
 }
 
+void UDSImageButtun::SetCNTitle(const FString& Title)
+{
+	TextBlock_CNTitle->SetText(FText::FromString(Title));
+}
+
 void UDSImageButtun::SetDescription(const FString& Description)
 {
 	TextBlock_Description->SetText(FText::FromString(Description));
@@ -28,14 +33,26 @@ void UDSImageButtun::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (!IsValid(ParentMaterialInstance)) return;
-	DynamicMaterialInstance = UMaterialInstanceDynamic::Create(ParentMaterialInstance, this);
+}
+
+void UDSImageButtun::UpdateTexture(UTexture2D* Background)
+{
+	if (!IsValid(ParentMaterialInstance) || !IsValid(Background)) return;
+	
 	if (IsValid(DynamicMaterialInstance))
 	{
-		// 设置纹理
-		DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Texture_Background);
-		DynamicMaterialInstance->SetScalarParameterValue(FName("Saturation"), BackgroundSaturationNormal);
-		
-		Image_Background->SetBrushFromMaterial(DynamicMaterialInstance);
+		DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Background);
+	}
+	else
+	{
+		DynamicMaterialInstance = UMaterialInstanceDynamic::Create(ParentMaterialInstance, this);
+		if (IsValid(DynamicMaterialInstance))
+		{
+			// 设置纹理
+			DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Background);
+			DynamicMaterialInstance->SetScalarParameterValue(FName("Saturation"), BackgroundSaturationNormal);
+			
+			Image_Background->SetBrushFromMaterial(DynamicMaterialInstance);
+		}
 	}
 }

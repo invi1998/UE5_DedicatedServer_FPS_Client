@@ -21,6 +21,12 @@ class DEDICATEDSERVERS_API UCareerPage : public UUserWidget
 public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTextBlock> TextBlock_UserName;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UTextBlock> TextBlock_Wins;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UTextBlock> TextBlock_Losses;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTextBlock> TextBlock_Status;
@@ -32,7 +38,7 @@ public:
 	TSubclassOf<UDSImageButtun> CareerAchievementButtonClass;
 
 	UFUNCTION()
-	void OnRetrieveMatchStatsReceived(const FDSRetrieveMatchStatsResponse& RetrieveMatchStatsResponse);
+	virtual void OnRetrieveMatchStatsReceived(const FDSRetrieveMatchStatsResponse& RetrieveMatchStatsResponse);
 
 	UFUNCTION()
 	void SetMatchStats(const FString& StatusStr, bool bNeedResetButton);

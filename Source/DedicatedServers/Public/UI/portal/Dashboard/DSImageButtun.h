@@ -8,6 +8,7 @@
 
 class UImage;
 class UTextBlock;
+class UTexture2D;
 /**
  * 
  */
@@ -47,10 +48,15 @@ public:
 	TObjectPtr<UTextBlock> TextBlock_Title;
 
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UTextBlock> TextBlock_CNTitle;
+
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UTextBlock> TextBlock_Description;
 
 	void SetTitle(const FString& Title);
+	void SetCNTitle(const FString& Title);
 	void SetDescription(const FString& Description);
+	void UpdateTexture(UTexture2D* Background);
 
 	UFUNCTION(BlueprintCallable)
 	void SetBackgroundSaturation(float Saturation);	// 饱和度
@@ -58,4 +64,7 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 	
+	
 };
+
+

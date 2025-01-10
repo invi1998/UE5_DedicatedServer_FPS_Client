@@ -18,7 +18,6 @@ class FPSTEMPLATE_API UShooterCareerPage : public UCareerPage
 	GENERATED_BODY()
 
 public:
-	UFUNCTION()
 	virtual void OnRetrieveMatchStatsReceived(const FDSRetrieveMatchStatsResponse& RetrieveMatchStatsResponse) override;
 
 protected:

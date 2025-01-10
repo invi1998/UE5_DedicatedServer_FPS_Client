@@ -46,6 +46,26 @@ void UGameStatsManager::RecordMatchStats(const FDSRecordMatchStatsInput& MatchSt
 	
 }
 
+void UGameStatsManager::RetrieveMatchStats()
+{
+	UDSLocalPlayerSubsystem* LocalPlayerSubsystem = GetDSLocalPlayerSubsystem();
+	if (!IsValid(LocalPlayerSubsystem)) return;
+	
+	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::GameStatsAPI::RetrieveMatchStats);
+	Request->SetURL(API_url);
+	Request->SetVerb(TEXT("POST"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	const FString AccessToken = LocalPlayerSubsystem->GetAuthenticationResult().AccessToken;
+	Request->SetHeader(TEXT("Authorization"), AccessToken);
+
+	Request->OnProcessRequestComplete().BindUObject(this, &UGameStatsManager::RetrieveMatchStats_Response);
+
+	Request->ProcessRequest();
+	
+}
+
 void UGameStatsManager::RecordMatchStats_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	if (!bWasSuccessful)
@@ -55,6 +75,26 @@ void UGameStatsManager::RecordMatchStats_Response(FHttpRequestPtr Request, FHttp
 	}
 
 	
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+	{
+		if (ContainErrors(JsonObject))
+		{
+			return;
+		}
+	}
+}
+
+void UGameStatsManager::RetrieveMatchStats_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	if (!bWasSuccessful)
+	{
+		UE_LOG(LogDedicatedServers, Error, TEXT("RetrieveMatchStats request failed"));
+		return;
+	}
+
 	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
 

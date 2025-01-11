@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "CommonButtonBase.h"
 #include "DSImageButtun.generated.h"
 
 class UImage;
@@ -13,23 +13,17 @@ class UTexture2D;
  * 
  */
 UCLASS()
-class DEDICATEDSERVERS_API UDSImageButtun : public UUserWidget
+class DEDICATEDSERVERS_API UDSImageButtun : public UCommonButtonBase
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget), Category = "DSImageButtun")
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Image_Background;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(BindWidget), Category = "DSImageButtun")
-	TObjectPtr<UImage> Image_Foreground;
 
 	// 纹理
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DSImageButtun")
 	TObjectPtr<UTexture2D> Texture_Background;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DSImageButtun")
-	TObjectPtr<UTexture2D> Texture_Foreground;
 
 	// 材质实例类型
 	UPROPERTY(EditDefaultsOnly, Category = "DSImageButtun")

@@ -178,4 +178,22 @@ void FDSRetrieveMatchStatsResponse::Dump() const
 	UE_LOG(LogDedicatedServers, Log, TEXT("  matchWins: %d"), matchWins);
 }
 
+void FDSLeaderboardEntry::Dump() const
+{
+	UE_LOG(LogDedicatedServers, Log, TEXT("FDSLeaderboardEntry:"));
+	UE_LOG(LogDedicatedServers, Log, TEXT("  username: %s"), *username);
+	UE_LOG(LogDedicatedServers, Log, TEXT("  matchWins: %d"), matchWins);
+	UE_LOG(LogDedicatedServers, Log, TEXT("  databaseid: %s"), *databaseid);
+}
+
+void FDSLeaderboard::Dump() const
+{
+	UE_LOG(LogDedicatedServers, Log, TEXT("FDSLeaderboard:"));
+	UE_LOG(LogDedicatedServers, Log, TEXT("  leaderboard:"));
+	for (const FDSLeaderboardEntry& LeaderboardEntry : leaderboard)
+	{
+		LeaderboardEntry.Dump();
+	}
+}
+
 

@@ -7,10 +7,12 @@
 #include "HTTP/HTTPRequestManager.h"
 #include "GameStatsManager.generated.h"
 
+struct FDSLeaderboard;
 struct FDSRetrieveMatchStatsResponse;
 struct FDSRecordMatchStatsInput;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRetrieveMatchStatsReceived, const FDSRetrieveMatchStatsResponse&, RetrieveMatchStatsResponse);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRetrieveLeaderboardReceived, const FDSLeaderboard&, RetrieveLeaderboardResponse);
 
 
 /**
@@ -38,7 +40,10 @@ public:
 	FAPIRequestComplete OnUpdateLeaderboardComplete;
 
 	UPROPERTY(BlueprintAssignable)
-	FAPIRequestComplete OnRetrieveLeaderboardComplete;
+	FAPIStatusMessage RetrieveLeaderboardStatusMessageDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnRetrieveLeaderboardReceived OnRetrieveLeaderboardReceived;	// 当接收到排行榜数据时触发
 
 private:
 	void RecordMatchStats_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);

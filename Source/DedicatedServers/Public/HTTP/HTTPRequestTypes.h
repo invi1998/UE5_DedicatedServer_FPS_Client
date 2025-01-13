@@ -490,5 +490,48 @@ struct FDSRetrieveMatchStatsResponse
 	void Dump() const;
 };
 
+/*
+{
+	"leaderboard": [
+	  {
+		"databaseid": "691e3498-7071-701a-d8cc-cd494b23be32",
+		"username": "test002",
+		"matchWins": 2
+	  },
+	  {
+		"databaseid": "998e94d8-e041-7049-35f7-4b42fe748e13",
+		"username": "test001",
+		"matchWins": 1
+	  }
+	]
+  }
+*/
+USTRUCT()
+struct FDSLeaderboardEntry
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString databaseid{};	// 用户SubID
+
+	UPROPERTY()
+	FString username{};		// 用户名
+
+	UPROPERTY()
+	int32 matchWins{};		// 比赛胜利场数
+
+	void Dump() const;
+};
+
+USTRUCT()
+struct FDSLeaderboard
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<FDSLeaderboardEntry> leaderboard;	// 排行榜
+
+	void Dump() const;
+};
 
 

@@ -70,6 +70,37 @@ void UGameStatsManager::RetrieveMatchStats()
 	
 }
 
+void UGameStatsManager::UpdateLeaderboard(const TArray<FString>& WinnerPlayerNames)
+{
+	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::GameStatsAPI::UpdateLeaderboard);
+	Request->SetURL(API_url);
+	Request->SetVerb(TEXT("POST"));
+	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	TSharedPtr<FJsonObject> LeaderboardJson = MakeShareable(new FJsonObject());
+	TArray<TSharedPtr<FJsonValue>> WinnerPlayerNamesJsonArray;
+	for (const FString& WinnerPlayerName : WinnerPlayerNames)
+	{
+		TSharedPtr<FJsonValue> WinnerPlayerNameJson = MakeShareable(new FJsonValueString(WinnerPlayerName));
+		WinnerPlayerNamesJsonArray.Add(WinnerPlayerNameJson);
+	}
+	LeaderboardJson->SetArrayField(TEXT("playerIds"), WinnerPlayerNamesJsonArray);
+	FString Content;
+	TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&Content);
+	FJsonSerializer::Serialize(LeaderboardJson.ToSharedRef(), JsonWriter);
+	Request->SetContentAsString(Content);
+
+	Request->OnProcessRequestComplete().BindUObject(this, &UGameStatsManager::UpdateLeaderboard_Response);
+
+	Request->ProcessRequest();
+}
+
+void UGameStatsManager::RetrieveLeaderboard()
+{
+	
+}
+
 void UGameStatsManager::RecordMatchStats_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	if (!bWasSuccessful)
@@ -116,4 +147,29 @@ void UGameStatsManager::RetrieveMatchStats_Response(FHttpRequestPtr Request, FHt
 		OnRetrieveMatchStatsReceived.Broadcast(RetrieveMatchStatsResponse);
 		RetrieveMatchStatsStatusMessageDelegate.Broadcast(TEXT(""), false);
 	}
+}
+
+void UGameStatsManager::UpdateLeaderboard_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
+	if (!bWasSuccessful)
+	{
+		OnUpdateLeaderboardComplete.Broadcast();
+		return;
+	}
+
+	
+	TSharedRef<TJsonReader<>> JsonReader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject());
+
+	if (FJsonSerializer::Deserialize(JsonReader, JsonObject))
+	{
+		if (ContainErrors(JsonObject))
+		{
+			return;
+		}
+	}
+}
+
+void UGameStatsManager::RetrieveLeaderboard_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+{
 }

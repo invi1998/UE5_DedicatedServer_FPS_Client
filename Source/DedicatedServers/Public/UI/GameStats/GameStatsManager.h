@@ -25,13 +25,24 @@ public:
 	void RecordMatchStats(const FDSRecordMatchStatsInput& MatchStatsInput);
 	void RetrieveMatchStats();
 
+	void UpdateLeaderboard(const TArray<FString> &WinnerPlayerNames);
+	void RetrieveLeaderboard();
+
 	UPROPERTY(BlueprintAssignable)
 	FAPIStatusMessage RetrieveMatchStatsStatusMessageDelegate;
 	
 	UPROPERTY(BlueprintAssignable)
 	FOnRetrieveMatchStatsReceived OnRetrieveMatchStatsReceived;	// 当接收到比赛统计数据时触发
 
+	UPROPERTY(BlueprintAssignable)
+	FAPIRequestComplete OnUpdateLeaderboardComplete;
+
+	UPROPERTY(BlueprintAssignable)
+	FAPIRequestComplete OnRetrieveLeaderboardComplete;
+
 private:
 	void RecordMatchStats_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	void RetrieveMatchStats_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void UpdateLeaderboard_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void RetrieveLeaderboard_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 };

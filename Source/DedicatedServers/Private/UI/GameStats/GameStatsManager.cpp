@@ -140,6 +140,7 @@ void UGameStatsManager::RetrieveMatchStats_Response(FHttpRequestPtr Request, FHt
 	{
 		if (ContainErrors(JsonObject))
 		{
+			RetrieveMatchStatsStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
 			return;
 		}
 
@@ -178,7 +179,6 @@ void UGameStatsManager::RetrieveLeaderboard_Response(FHttpRequestPtr Request, FH
 	if (!bWasSuccessful)
 	{
 		RetrieveLeaderboardStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
-		OnRetrieveLeaderboardReceived.Broadcast(FDSLeaderboard());
 		return;
 	}
 
@@ -189,13 +189,32 @@ void UGameStatsManager::RetrieveLeaderboard_Response(FHttpRequestPtr Request, FH
 	{
 		if (ContainErrors(JsonObject))
 		{
+			RetrieveLeaderboardStatusMessageDelegate.Broadcast(HTTPStatusMessages::SomethingWentWrong, true);
 			return;
 		}
 
-		FDSLeaderboard RetrieveLeaderboardResponse;
-		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &RetrieveLeaderboardResponse);
-
-		RetrieveLeaderboardStatusMessageDelegate.Broadcast(TEXT(""), false);
-		OnRetrieveLeaderboardReceived.Broadcast(RetrieveLeaderboardResponse);
+		if (JsonObject->HasField(TEXT("leaderboard")))
+		{
+			TArray<FDSLeaderboardItem> LeaderboardItems;
+			const TArray<TSharedPtr<FJsonValue>> LeaderboardJsonArray = JsonObject->GetArrayField(TEXT("leaderboard"));
+			for (const TSharedPtr<FJsonValue>& LeaderboardItemJson : LeaderboardJsonArray)
+			{
+				TSharedPtr<FJsonObject> LeaderboardItemJsonObject = LeaderboardItemJson->AsObject();
+				if (LeaderboardItemJsonObject.IsValid())
+				{
+					FDSLeaderboardItem LeaderboardItem;
+					if (FJsonObjectConverter::JsonObjectToUStruct(LeaderboardItemJsonObject.ToSharedRef(), &LeaderboardItem))
+					{
+						LeaderboardItems.Add(LeaderboardItem);
+					}
+					else
+					{
+						UE_LOG(LogDedicatedServers, Error, TEXT("RetrieveLeaderboard_Response: Failed to convert JsonObject to FDSLeaderboardItem"));
+					}
+				}
+			}
+			RetrieveLeaderboardStatusMessageDelegate.Broadcast(TEXT(""), false);
+			OnRetrieveLeaderboardReceived.Broadcast(LeaderboardItems);
+		}
 	}
 }

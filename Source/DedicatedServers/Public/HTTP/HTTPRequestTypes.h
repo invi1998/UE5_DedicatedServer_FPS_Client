@@ -507,7 +507,7 @@ struct FDSRetrieveMatchStatsResponse
   }
 */
 USTRUCT()
-struct FDSLeaderboardEntry
+struct FDSLeaderboardItem
 {
 	GENERATED_BODY()
 
@@ -523,15 +523,5 @@ struct FDSLeaderboardEntry
 	void Dump() const;
 };
 
-USTRUCT()
-struct FDSLeaderboard
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	TArray<FDSLeaderboardEntry> leaderboard;	// 排行榜
-
-	void Dump() const;
-};
 
 

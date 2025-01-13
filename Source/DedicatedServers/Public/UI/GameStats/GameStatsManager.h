@@ -7,12 +7,12 @@
 #include "HTTP/HTTPRequestManager.h"
 #include "GameStatsManager.generated.h"
 
-struct FDSLeaderboard;
+struct FDSLeaderboardItem;
 struct FDSRetrieveMatchStatsResponse;
 struct FDSRecordMatchStatsInput;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRetrieveMatchStatsReceived, const FDSRetrieveMatchStatsResponse&, RetrieveMatchStatsResponse);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRetrieveLeaderboardReceived, const FDSLeaderboard&, RetrieveLeaderboardResponse);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRetrieveLeaderboardReceived, const TArray<FDSLeaderboardItem>&, RetrieveLeaderboardResponse);
 
 
 /**

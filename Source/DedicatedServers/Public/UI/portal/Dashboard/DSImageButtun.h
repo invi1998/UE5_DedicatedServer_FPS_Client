@@ -32,10 +32,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "DSImageButtun")
 	TObjectPtr<UMaterialInstanceDynamic> DynamicMaterialInstance;	// 动态材质实例
 
-	UPROPERTY(EditDefaultsOnly, Category = "DSImageButtun")
+	UPROPERTY(BlueprintReadWrite, Category = "DSImageButtun")
 	float BackgroundSaturationNormal = 0.0f;	// 饱和度
 
-	UPROPERTY(EditDefaultsOnly, Category = "DSImageButtun")
+	UPROPERTY(BlueprintReadWrite, Category = "DSImageButtun")
 	float BackgroundSaturationHovered = 1.2f;	// 饱和度
 
 	UPROPERTY(meta=(BindWidget))

@@ -33,6 +33,8 @@ void UDSImageButtun::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	UpdateTexture(Texture_Background);
+
 }
 
 void UDSImageButtun::UpdateTexture(UTexture2D* Background)
@@ -42,6 +44,8 @@ void UDSImageButtun::UpdateTexture(UTexture2D* Background)
 	if (IsValid(DynamicMaterialInstance))
 	{
 		DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Background);
+		DynamicMaterialInstance->SetScalarParameterValue(FName("Saturation"), BackgroundSaturationNormal);
+		Image_Background->SetBrushFromMaterial(DynamicMaterialInstance);
 	}
 	else
 	{

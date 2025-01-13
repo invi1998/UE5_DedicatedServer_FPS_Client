@@ -40,10 +40,12 @@ void UDSImageButtun::NativeConstruct()
 void UDSImageButtun::UpdateTexture(UTexture2D* Background)
 {
 	if (!IsValid(ParentMaterialInstance) || !IsValid(Background)) return;
+
+	Texture_Background = Background;
 	
 	if (IsValid(DynamicMaterialInstance))
 	{
-		DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Background);
+		DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Texture_Background);
 		DynamicMaterialInstance->SetScalarParameterValue(FName("Saturation"), BackgroundSaturationNormal);
 		Image_Background->SetBrushFromMaterial(DynamicMaterialInstance);
 	}
@@ -53,7 +55,7 @@ void UDSImageButtun::UpdateTexture(UTexture2D* Background)
 		if (IsValid(DynamicMaterialInstance))
 		{
 			// 设置纹理
-			DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Background);
+			DynamicMaterialInstance->SetTextureParameterValue(FName("Texture"), Texture_Background);
 			DynamicMaterialInstance->SetScalarParameterValue(FName("Saturation"), BackgroundSaturationNormal);
 			
 			Image_Background->SetBrushFromMaterial(DynamicMaterialInstance);

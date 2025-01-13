@@ -43,6 +43,7 @@ void UDashboardOverlay::ShowCareerPage()
 	Button_Setting->SetIsEnabled(false);
 	
 	WidgetSwitcher->SetActiveWidget(CareerPage);
+	GameStatsManager->RetrieveMatchStats();
 
 	Button_Career->SetIsEnabled(true);
 	Button_Game->SetIsEnabled(true);

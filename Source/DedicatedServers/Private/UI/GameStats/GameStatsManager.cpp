@@ -59,7 +59,10 @@ void UGameStatsManager::RetrieveMatchStats()
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
 	const FString AccessToken = LocalPlayerSubsystem->GetAuthenticationResult().AccessToken;
-	Request->SetHeader(TEXT("Authorization"), AccessToken);
+	const TMap<FString, FString> Params = {
+		{TEXT("accessToken"), AccessToken}
+	};
+	Request->SetContentAsString(SerializeJsonContent(Params));
 
 	Request->OnProcessRequestComplete().BindUObject(this, &UGameStatsManager::RetrieveMatchStats_Response);
 
@@ -109,7 +112,6 @@ void UGameStatsManager::RetrieveMatchStats_Response(FHttpRequestPtr Request, FHt
 
 		FDSRetrieveMatchStatsResponse RetrieveMatchStatsResponse;
 		FJsonObjectConverter::JsonObjectToUStruct(JsonObject.ToSharedRef(), &RetrieveMatchStatsResponse);
-		RetrieveMatchStatsResponse.Dump();
 
 		OnRetrieveMatchStatsReceived.Broadcast(RetrieveMatchStatsResponse);
 		RetrieveMatchStatsStatusMessageDelegate.Broadcast(TEXT(""), false);

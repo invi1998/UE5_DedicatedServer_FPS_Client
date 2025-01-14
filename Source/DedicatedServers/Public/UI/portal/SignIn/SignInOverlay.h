@@ -30,6 +30,9 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UWidgetSwitcher> WidgetSwitcher;
 
+	UFUNCTION(BlueprintCallable)
+	void AutoSignIn();
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -49,8 +52,7 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UPortalManager> PortalManager;
-
-	void AutoSignIn();
+	
 
 	UFUNCTION()
 	void ShowSignInPage();

@@ -520,6 +520,9 @@ struct FDSLeaderboardItem
 	UPROPERTY()
 	int32 matchWins{};		// 比赛胜利场数
 
+	UPROPERTY()
+	int32 rank{};			// 排名
+
 	void Dump() const;
 };
 

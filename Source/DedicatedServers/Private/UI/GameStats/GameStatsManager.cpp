@@ -213,8 +213,31 @@ void UGameStatsManager::RetrieveLeaderboard_Response(FHttpRequestPtr Request, FH
 					}
 				}
 			}
+			CaculateLeaderboard(LeaderboardItems);
 			RetrieveLeaderboardStatusMessageDelegate.Broadcast(TEXT(""), false);
 			OnRetrieveLeaderboardReceived.Broadcast(LeaderboardItems);
+		}
+	}
+}
+
+void UGameStatsManager::CaculateLeaderboard(TArray<FDSLeaderboardItem>& LeaderboardItems)
+{
+	// 排序
+	LeaderboardItems.Sort([](const FDSLeaderboardItem& A, const FDSLeaderboardItem& B) {
+		return A.matchWins > B.matchWins;
+	});
+
+	// 计算排名
+	for (int i = 0; i < LeaderboardItems.Num(); i++)
+	{
+		if (i >0 && LeaderboardItems[i].matchWins == LeaderboardItems[i - 1].matchWins)
+		{
+			// 如果当前玩家的比赛胜利场数和上一个玩家的比赛胜利场数相同，则排名也相同
+			LeaderboardItems[i].rank = LeaderboardItems[i - 1].rank;
+		}
+		else
+		{
+			LeaderboardItems[i].rank = i + 1;
 		}
 	}
 }

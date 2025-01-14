@@ -184,6 +184,7 @@ void FDSLeaderboardItem::Dump() const
 	UE_LOG(LogDedicatedServers, Log, TEXT("  username: %s"), *username);
 	UE_LOG(LogDedicatedServers, Log, TEXT("  matchWins: %d"), matchWins);
 	UE_LOG(LogDedicatedServers, Log, TEXT("  databaseid: %s"), *databaseid);
+	UE_LOG(LogDedicatedServers, Log, TEXT("  rank: %d"), rank);
 }
 
 

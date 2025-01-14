@@ -50,6 +50,8 @@ private:
 	UPROPERTY()
 	TObjectPtr<UPortalManager> PortalManager;
 
+	void AutoSignIn();
+
 	UFUNCTION()
 	void ShowSignInPage();
 

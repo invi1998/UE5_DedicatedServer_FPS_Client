@@ -30,6 +30,8 @@ void UDashboardOverlay::NativeConstruct()
 		GameStatsManager->OnRetrieveLeaderboardReceived.AddDynamic(Leaderboard, &ULeaderboard::PopulateLeaderboard);
 		GameStatsManager->RetrieveLeaderboardStatusMessageDelegate.AddDynamic(Leaderboard, &ULeaderboard::SetStatusMessage);
 	}
+
+	ShowGamePage();
 }
 
 void UDashboardOverlay::ShowGamePage()

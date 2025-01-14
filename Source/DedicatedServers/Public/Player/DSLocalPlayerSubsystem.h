@@ -27,6 +27,7 @@ public:
 
 	FString UserName{};
 	FString Email{};
+	FString Password{};
 	
 private:
 	void RefreshToken();

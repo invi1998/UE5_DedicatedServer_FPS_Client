@@ -7,6 +7,7 @@
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
 #include "Components/WidgetSwitcher.h"
+#include "Player/DSLocalPlayerSubsystem.h"
 #include "UI/API/GameSessions/JoinGame.h"
 #include "UI/portal/PortalManager.h"
 #include "UI/portal/SignIn/ConfirmAccountPage.h"
@@ -40,7 +41,7 @@ void USignInOverlay::NativeConstruct()
 	
 	SuccessConfirmPage->Button_OK->OnClicked.AddDynamic(this, &USignInOverlay::OKButtonClicked);
 
-	
+	ShowSignInPage();
 }
 
 void USignInOverlay::NativeDestruct()
@@ -51,6 +52,23 @@ void USignInOverlay::NativeDestruct()
 	if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld()))
 	{
 		LocalPlayerController->GetWorldTimerManager().ClearTimer(ResendCodeTimerHandle);
+	}
+}
+
+void USignInOverlay::AutoSignIn()
+{
+	UDSLocalPlayerSubsystem* LocalPlayerSubsystem = PortalManager->GetDSLocalPlayerSubsystem();
+	if (IsValid(LocalPlayerSubsystem))
+	{
+		const FString Username = LocalPlayerSubsystem->UserName;
+		const FString Password = LocalPlayerSubsystem->Password;
+		if (!Username.IsEmpty() && !Password.IsEmpty())
+		{
+			SignInPage->TextBox_Username->SetText(FText::FromString(Username));
+			SignInPage->TextBox_Password->SetText(FText::FromString(Password));
+			SignInPage->Button_SignIn->SetIsEnabled(false);
+			PortalManager->SignIn(Username, Password);
+		}
 	}
 }
 
@@ -78,6 +96,11 @@ void USignInOverlay::SignInButtonClicked()
 {
 	const FString Username = SignInPage->TextBox_Username->GetText().ToString();
 	const FString Password = SignInPage->TextBox_Password->GetText().ToString();
+	UDSLocalPlayerSubsystem* LocalPlayerSubsystem = PortalManager->GetDSLocalPlayerSubsystem();
+	if (IsValid(LocalPlayerSubsystem))
+	{
+		LocalPlayerSubsystem->Password = Password;
+	}
 	PortalManager->SignIn(Username, Password);
 }
 

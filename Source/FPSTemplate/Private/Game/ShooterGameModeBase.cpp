@@ -3,9 +3,12 @@
 
 #include "Game/ShooterGameModeBase.h"
 
+#include "Game/MatchGameState.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/DSPlayerController.h"
+#include "Player/MatchPlayerState.h"
 
 AShooterGameModeBase::AShooterGameModeBase()
 {
@@ -53,5 +56,26 @@ void AShooterGameModeBase::RequestRespawn(ACharacter* ElimmedCharacter, AControl
 		UGameplayStatics::GetAllActorsOfClass(this, APlayerStart::StaticClass(), PlayerStarts);
 		int32 Selection = FMath::RandRange(0, PlayerStarts.Num() - 1);
 		RestartPlayerAtPlayerStart(ElimmedController, PlayerStarts[Selection]);
+	}
+}
+
+void AShooterGameModeBase::OnMatchTimerFinished()
+{
+	Super::OnMatchTimerFinished();
+	AMatchGameState* MatchGameState = GetGameState<AMatchGameState>();
+	if (IsValid(MatchGameState))
+	{
+		TArray<FString> WinnersNames;
+		TArray<AMatchPlayerState*> PlayerStates = MatchGameState->GetLeaders();
+		for (AMatchPlayerState* Leader: PlayerStates)
+		{
+			ADSPlayerController* LeaderController = Cast<ADSPlayerController>(Leader->GetOwner());
+			if (IsValid(LeaderController))
+			{
+				WinnersNames.Add(LeaderController->UserName);
+			}
+		}
+
+		UpdateLeaderboard(WinnersNames);
 	}
 }

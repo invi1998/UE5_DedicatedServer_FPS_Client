@@ -155,9 +155,9 @@ void UGameStatsManager::RetrieveMatchStats_Response(FHttpRequestPtr Request, FHt
 
 void UGameStatsManager::UpdateLeaderboard_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
+	OnUpdateLeaderboardComplete.Broadcast();
 	if (!bWasSuccessful)
 	{
-		OnUpdateLeaderboardComplete.Broadcast();
 		return;
 	}
 

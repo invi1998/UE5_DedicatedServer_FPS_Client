@@ -6,6 +6,7 @@
 #include "DS_GameModeBase.h"
 #include "DS_MatchGameMode.generated.h"
 
+class UGameStatsManager;
 /**
  * 主要用于处理比赛的游戏模式
  */
@@ -24,7 +25,15 @@ public:
 	UPROPERTY()
 	EMatchStatus MatchStatus;	// 比赛状态
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameStatsManager> GameStatsManagerClass;
+
 protected:
+	virtual void BeginPlay() override;
+	
+	virtual void OnCountdownTimerFinished(ECountdownTimerType InTimerType) override;
+	virtual void OnMatchTimerFinished();
+	
 	UPROPERTY(EditDefaultsOnly)
 	FCountdownTimerHandle PreMatchTimer;	// 比赛前定时器句柄
 	
@@ -36,14 +45,18 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UWorld> LobbyMap;	// 无缝旅行目标地图(大厅地图)
-
-	virtual void OnCountdownTimerFinished(ECountdownTimerType InTimerType) override;
-
+	
 	void SetClientInputEnabled(bool bEnable);
+	void FinishMatchForPlayerStates() const;
+	void UpdateLeaderboard(const TArray<FString>& WinnerPlayerNames);
 
-	void OnMatchTimerFinished();
+	UFUNCTION()
+	void OnLeaderboardUpdated();
 	
 private:
+	
+	UPROPERTY()
+	TObjectPtr<UGameStatsManager> GameStatsManager;
 	
 };
 

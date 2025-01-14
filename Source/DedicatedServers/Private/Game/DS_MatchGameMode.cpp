@@ -5,6 +5,7 @@
 
 #include "Player/DSPlayerController.h"
 #include "Player/DS_MatchPlayerState.h"
+#include "UI/GameStats/GameStatsManager.h"
 
 ADS_MatchGameMode::ADS_MatchGameMode()
 {
@@ -47,6 +48,17 @@ void ADS_MatchGameMode::Logout(AController* Exiting)
 	RemovePlayerSession(Exiting);
 }
 
+void ADS_MatchGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GameStatsManager = NewObject<UGameStatsManager>(this, GameStatsManagerClass);
+	if (IsValid(GameStatsManager))
+	{
+		GameStatsManager->OnUpdateLeaderboardComplete.AddDynamic(this, &ADS_MatchGameMode::OnLeaderboardUpdated);
+	}
+}
+
 void ADS_MatchGameMode::OnCountdownTimerFinished(ECountdownTimerType InTimerType)
 {
 	Super::OnCountdownTimerFinished(InTimerType);
@@ -74,6 +86,11 @@ void ADS_MatchGameMode::OnCountdownTimerFinished(ECountdownTimerType InTimerType
 	}
 }
 
+void ADS_MatchGameMode::OnMatchTimerFinished()
+{
+	
+}
+
 void ADS_MatchGameMode::SetClientInputEnabled(bool bEnable)
 {
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
@@ -86,7 +103,7 @@ void ADS_MatchGameMode::SetClientInputEnabled(bool bEnable)
 	}
 }
 
-void ADS_MatchGameMode::OnMatchTimerFinished()
+void ADS_MatchGameMode::FinishMatchForPlayerStates() const
 {
 	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
@@ -98,3 +115,18 @@ void ADS_MatchGameMode::OnMatchTimerFinished()
 		}
 	}
 }
+
+void ADS_MatchGameMode::UpdateLeaderboard(const TArray<FString>& WinnerPlayerNames)
+{
+	if (IsValid(GameStatsManager))
+	{
+		GameStatsManager->UpdateLeaderboard(WinnerPlayerNames);
+	}
+}
+
+void ADS_MatchGameMode::OnLeaderboardUpdated()
+{
+	FinishMatchForPlayerStates();
+}
+
+

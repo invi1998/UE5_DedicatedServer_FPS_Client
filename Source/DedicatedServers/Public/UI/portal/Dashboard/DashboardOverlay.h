@@ -75,6 +75,6 @@ private:
 	UFUNCTION()
 	void ShowSettingPage();
 
-	void SetEnableButton(UCommonButtonBase* Button, bool bEnable);
+	void DisableButton(UCommonButtonBase* Button);
 
 };

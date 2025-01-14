@@ -4,10 +4,11 @@
 #include "UI/portal/Dashboard/Leaderboard.h"
 
 #include "Components/ScrollBox.h"
+#include "Components/TextBlock.h"
 #include "HTTP/HTTPRequestTypes.h"
 #include "UI/portal/Dashboard/LeaderboardCard.h"
 
-void ULeaderboard::PopulateLeaderboard(TArray<FDSLeaderboardItem>& LeaderboardItems)
+void ULeaderboard::PopulateLeaderboard(const TArray<FDSLeaderboardItem>& LeaderboardItems)
 {
 	ScrollBox_Leaderboard->ClearChildren();
 
@@ -21,5 +22,11 @@ void ULeaderboard::PopulateLeaderboard(TArray<FDSLeaderboardItem>& LeaderboardIt
 		}
 	}
 	
+}
+
+void ULeaderboard::SetStatusMessage(const FString& StatusMessage, bool bIsError)
+{
+	TextBlock_StatusMessage->SetText(FText::FromString(StatusMessage));
+	TextBlock_StatusMessage->SetColorAndOpacity(bIsError ? ErrorColor : SuccessColor);
 }
 

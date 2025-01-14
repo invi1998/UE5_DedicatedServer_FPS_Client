@@ -27,6 +27,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Leaderboard")
 	TSubclassOf<ULeaderboardCard> LeaderboardCardClass;
 
-	void PopulateLeaderboard(TArray<FDSLeaderboardItem>& LeaderboardItems);
+	UPROPERTY(EditDefaultsOnly)
+	FLinearColor ErrorColor = FLinearColor::Red;
+
+	UPROPERTY(EditDefaultsOnly)
+	FLinearColor SuccessColor = FLinearColor::Green;
+
+	UFUNCTION()
+	void PopulateLeaderboard(const TArray<FDSLeaderboardItem>& LeaderboardItems);
+
+	UFUNCTION()
+	void SetStatusMessage(const FString& StatusMessage, bool bIsError);
 	
 };

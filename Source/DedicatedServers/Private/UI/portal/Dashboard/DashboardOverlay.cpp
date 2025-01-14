@@ -27,41 +27,45 @@ void UDashboardOverlay::NativeConstruct()
 	{
 		GameStatsManager->OnRetrieveMatchStatsReceived.AddDynamic(CareerPage, &UCareerPage::OnRetrieveMatchStatsReceived);
 		GameStatsManager->RetrieveMatchStatsStatusMessageDelegate.AddDynamic(CareerPage, &UCareerPage::SetMatchStats);
+		GameStatsManager->OnRetrieveLeaderboardReceived.AddDynamic(Leaderboard, &ULeaderboard::PopulateLeaderboard);
+		GameStatsManager->RetrieveLeaderboardStatusMessageDelegate.AddDynamic(Leaderboard, &ULeaderboard::SetStatusMessage);
 	}
 }
 
 void UDashboardOverlay::ShowGamePage()
 {
+	DisableButton(Button_Game);
 	WidgetSwitcher->SetActiveWidget(GamePage);
 }
 
 void UDashboardOverlay::ShowCareerPage()
 {
-	Button_Career->SetIsEnabled(false);
-	Button_Game->SetIsEnabled(false);
-	Button_Leaderboard->SetIsEnabled(false);
-	Button_Setting->SetIsEnabled(false);
+	DisableButton(Button_Career);
 	
 	WidgetSwitcher->SetActiveWidget(CareerPage);
 	GameStatsManager->RetrieveMatchStats();
-
-	Button_Career->SetIsEnabled(true);
-	Button_Game->SetIsEnabled(true);
-	Button_Leaderboard->SetIsEnabled(true);
-	Button_Setting->SetIsEnabled(true);
 }
 
 void UDashboardOverlay::ShowLeaderboard()
 {
+	DisableButton(Button_Leaderboard);
 	WidgetSwitcher->SetActiveWidget(Leaderboard);
+	GameStatsManager->RetrieveLeaderboard();
 }
 
 void UDashboardOverlay::ShowSettingPage()
 {
+	DisableButton(Button_Setting);
 	WidgetSwitcher->SetActiveWidget(SettingPage);
 }
 
-void UDashboardOverlay::SetEnableButton(UCommonButtonBase* Button, bool bEnable)
+void UDashboardOverlay::DisableButton(UCommonButtonBase* Button)
 {
-	Button->SetIsEnabled(bEnable);
+	Button_Career->SetIsEnabled(true);
+	Button_Game->SetIsEnabled(true);
+	Button_Leaderboard->SetIsEnabled(true);
+	Button_Setting->SetIsEnabled(true);
+
+	Button->SetIsEnabled(false);
 }
+

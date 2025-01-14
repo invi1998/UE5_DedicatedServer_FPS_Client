@@ -34,13 +34,13 @@ void UDashboardOverlay::NativeConstruct()
 
 void UDashboardOverlay::ShowGamePage()
 {
-	DisableButton(Button_Game);
+	// DisableButton(Button_Game);
 	WidgetSwitcher->SetActiveWidget(GamePage);
 }
 
 void UDashboardOverlay::ShowCareerPage()
 {
-	DisableButton(Button_Career);
+	// DisableButton(Button_Career);
 	
 	WidgetSwitcher->SetActiveWidget(CareerPage);
 	GameStatsManager->RetrieveMatchStats();
@@ -48,14 +48,14 @@ void UDashboardOverlay::ShowCareerPage()
 
 void UDashboardOverlay::ShowLeaderboard()
 {
-	DisableButton(Button_Leaderboard);
+	// DisableButton(Button_Leaderboard);
 	WidgetSwitcher->SetActiveWidget(Leaderboard);
 	GameStatsManager->RetrieveLeaderboard();
 }
 
 void UDashboardOverlay::ShowSettingPage()
 {
-	DisableButton(Button_Setting);
+	// DisableButton(Button_Setting);
 	WidgetSwitcher->SetActiveWidget(SettingPage);
 }
 

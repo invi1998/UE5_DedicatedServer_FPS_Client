@@ -93,7 +93,7 @@ void UGameStatsManager::RetrieveLeaderboard()
 {
 	RetrieveLeaderboardStatusMessageDelegate.Broadcast(TEXT("正在获取排行榜数据..."), false);
 	TSharedRef<IHttpRequest> Request = FHttpModule::Get().CreateRequest();
-	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::GameStatsAPI::RecordMatchStats);
+	const FString API_url = APIData->GetAPIEndPoint(DedicatedServersTags::GameStatsAPI::RetrieveLeaderboard);
 	Request->SetURL(API_url);
 	Request->SetVerb(TEXT("GET"));
 	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));

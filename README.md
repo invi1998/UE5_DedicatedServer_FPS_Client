@@ -4,6 +4,8 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/invi1998/MultiplayerBlasterGame/blob/main/LICENSE)
 
+[![Bilibili](https://img.shields.io/badge/Bilibili-invi1998-brightgreen?logo=bilibili&logoColor=blue)](https://www.bilibili.com/video/BV1yGcieeEWd)
+
 [![JetBrains Logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.png)](https://jb.gg/OpenSourceSupport)
 
 
